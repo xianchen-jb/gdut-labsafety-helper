@@ -76,6 +76,13 @@ function makeEl(tag) {
     querySelectorAll(sel) { return this._q[sel] || []; },
     scrollIntoView() {},
     getBoundingClientRect() { return { left: 0, top: 0, width: 0, height: 0 }; },
+    // 模拟原生点击：单选组内互斥，点击后自己变成 is-checked
+    click() {
+      (this._group || []).forEach((l) => l.classList.remove('is-checked'));
+      this.classList.add('is-checked');
+      const input = this.querySelector && this.querySelector('input');
+      if (input) input.checked = true;
+    },
     setPointerCapture() {}, releasePointerCapture() {}, hasPointerCapture() { return false; },
   };
   return el;
@@ -142,6 +149,7 @@ function fakeQuestion(id, title, opts) {
     l.innerText = text;
     return l;
   });
+  labels.forEach((l) => { l._group = labels; });
   q._q['.question-options label'] = labels;
   q._q['.el-checkbox'] = [];
   q._q['img'] = [];
@@ -156,7 +164,8 @@ const q1 = fakeQuestion('question-1', '实验室人员发生触电时，下例�
   'D. 无',
 ]);
 const q2 = fakeQuestion('question-2', '实验室发现可燃气体泄漏，要迅速切断电源，打开门窗。', ['对', '错']);
-selMap['[id^="question-"]'] = [q1, q2];
+const q3 = fakeQuestion('question-3', '窒息灭火法的主要工具是（）。', ['A. 水', 'B. 二氧化碳灭火器', 'C. 砂子', 'D. 干粉灭火器']);
+selMap['[id^="question-"]'] = [q1, q2, q3];
 
 globalThis.document = document;
 globalThis.window = {
@@ -223,6 +232,43 @@ checks.push([
   diagTitles.length > 0 && diagTitles.every((t) => !/\s[图]?[✓≈?]\s/.test(t)),
   diagTitles.join(' | ').slice(0, 90),
 ]);
+
+// 一键作答：应把引擎答案点选上去，且不触碰其它东西
+const autoBtn = (panel && panel._q['button[data-act="auto"]'] || [])[0];
+if (autoBtn) {
+  let node = autoBtn;
+  while (node) {
+    (node._listeners.click || []).forEach((fn) => fn({ target: autoBtn }));
+    node = node.parentElement;
+  }
+}
+const q1labels = q1._q['.question-options label'];
+const q2labels = q2._q['.question-options label'];
+checks.push(['一键作答按钮存在', !!autoBtn, '']);
+checks.push(['第1题被自动选中 B', !!q1labels[1] && q1labels[1].classList.contains('is-checked'),
+  'checked=' + q1labels.map((l) => (l.classList.contains('is-checked') ? 1 : 0)).join('')]);
+checks.push(['第2题被自动选中"错"', !!q2labels[1] && q2labels[1].classList.contains('is-checked'),
+  'checked=' + q2labels.map((l) => (l.classList.contains('is-checked') ? 1 : 0)).join('')]);
+checks.push(['只选了一项（单选互斥）', q1labels.filter((l) => l.classList.contains('is-checked')).length === 1, '']);
+checks.push(['面板标注已填', /已填/.test(panel.querySelector('.foot') ? panel.querySelector('.foot').textContent : ''), '']);
+
+// 范围过滤：默认"只填确信"，未命中/仅参考的题不应被填；切到"全部"后才填
+const q3labels = q3._q['.question-options label'];
+checks.push(['默认范围不碰仅参考的题', q3labels.every((l) => !l.classList.contains('is-checked')),
+  'checked=' + q3labels.map((l) => (l.classList.contains('is-checked') ? 1 : 0)).join('')]);
+
+const scopeSel = (panel && panel._q['select[data-act="scope"]'] || [])[0];
+if (scopeSel) {
+  scopeSel.value = 'all';
+  (scopeSel._listeners.change || []).forEach((fn) => fn({ target: scopeSel }));
+  let node = autoBtn;
+  while (node) {
+    (node._listeners.click || []).forEach((fn) => fn({ target: autoBtn }));
+    node = node.parentElement;
+  }
+}
+checks.push(['切到"全部"后会填仅参考的题', !!q3labels[1] && q3labels[1].classList.contains('is-checked'),
+  'checked=' + q3labels.map((l) => (l.classList.contains('is-checked') ? 1 : 0)).join('')]);
 
 let ok = true;
 for (const [name, pass, detail] of checks) {

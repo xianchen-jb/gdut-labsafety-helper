@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         广工实验室安全 · 开卷助手（只读标注版）
 // @namespace    local.gdut.labsafety.helper
-// @version      0.4.5
+// @version      0.5.0
 // @description  广工实验室安全考试开卷助手：读卷比对内置题库（3066 题），面板列答案并高亮正确选项，支持图片指纹匹配与三级可信度标注。只标注，不自动点选、不自动交卷。
 // @author       local
 // @match        https://labsafety.gdut.edu.cn/*
@@ -24,7 +24,7 @@
   const CFG_KEY = 'gdut-helper.cfg.v1';
   const PANEL_ID = PREFIX + '-panel';
 
-  const cfg = Object.assign({ collapsed: false, highlight: true, pos: null }, readCfg());
+  const cfg = Object.assign({ collapsed: false, highlight: true, pos: null, scope: 'high' }, readCfg());
 
   function readCfg() {
     try { return JSON.parse(localStorage.getItem(CFG_KEY) || '{}') || {}; } catch (e) { return {}; }
@@ -169,6 +169,8 @@
       '#' + PANEL_ID + ' button{border:1px solid #d3dae3;background:#fff;border-radius:6px;',
       'padding:2px 8px;font-size:12px;cursor:pointer;color:#374151;}',
       '#' + PANEL_ID + ' button:hover{background:#f0f3f7;}',
+      '#' + PANEL_ID + ' select{border:1px solid #d3dae3;border-radius:6px;padding:1px 3px;',
+      'font-size:12px;color:#374151;background:#fff;max-width:86px;}',
       '#' + PANEL_ID + ' .body{max-height:52vh;overflow:auto;padding:6px 4px;}',
       '#' + PANEL_ID + ' .row{display:flex;gap:6px;align-items:flex-start;padding:4px 8px;border-radius:6px;cursor:pointer;}',
       '#' + PANEL_ID + ' .row:hover{background:#f2f5f9;}',
@@ -204,12 +206,21 @@
     panelEl.id = PANEL_ID;
     panelEl.innerHTML =
       '<div class="h"><b>安全考试 · 开卷助手</b>' +
+      '<select data-act="scope" title="一键作答的范围"><option value="high">只填确信</option>' +
+      '<option value="mid">确信+待核对</option><option value="all">全部（含参考）</option></select>' +
+      '<button data-act="auto">一键作答</button>' +
       '<button data-act="toggle">' + (cfg.collapsed ? '展开' : '收起') + '</button>' +
       '<button data-act="export">导出诊断</button>' +
       '<button data-act="rescan">重扫</button></div>' +
       '<div class="body"></div>' +
       '<div class="foot"></div>';
     document.body.appendChild(panelEl);
+
+    const scopeSel = panelEl.querySelector('select[data-act="scope"]');
+    if (scopeSel) {
+      scopeSel.value = cfg.scope;
+      scopeSel.addEventListener('change', () => { cfg.scope = scopeSel.value; saveCfg(); });
+    }
 
     panelEl.addEventListener('click', (ev) => {
       const btn = ev.target.closest && ev.target.closest('button');
@@ -218,6 +229,7 @@
         if (act === 'toggle') { cfg.collapsed = !cfg.collapsed; saveCfg(); applyCollapsed(); }
         if (act === 'rescan') { scan(true); }
         if (act === 'export') { exportDiag(); }
+        if (act === 'auto') { runAuto(); }
         if (act === 'diag-copy') {
           const ok = copyText(lastDiagText);
           btn.textContent = ok ? '已复制' : '请手动全选复制';
@@ -280,7 +292,8 @@
         const cls = r.tier === 'mid' ? 'a mid' : 'a';
         const mark = r.tier === 'mid' ? '≈' + letters : letters;
         return '<div class="row" data-n="' + q.n + '"><i>' + q.n + '.</i><em class="' + cls + '">' + mark +
-          '</em><span>' + esc(text) + (r.partial ? '（部分匹配）' : '') + '</span></div>';
+          '</em><span>' + esc(text) + (r.partial ? '（部分匹配）' : '') +
+          (autoFilled.has(q.n) ? ' · 已填' : '') + '</span></div>';
       }
       const ref = r.reference;
       if (ref && ref.picks.length) {
@@ -345,6 +358,74 @@
   let busy = false;
   let lastPaper = null;
   let lastResults = null;
+  const autoFilled = new Set();
+
+  /* ------------------------- 一键作答（只点选，不提交） ------------------------- */
+
+  function isChecked(label) {
+    if (!label) return false;
+    if (label.classList.contains('is-checked')) return true;
+    const input = label.querySelector && label.querySelector('input');
+    return !!(input && input.checked);
+  }
+
+  // 用真实点击事件选中某个选项；点不动时逐级重试更内层的元素
+  function clickOption(label) {
+    if (!label) return false;
+    const targets = [
+      label,
+      label.querySelector && label.querySelector('.el-radio__inner, .el-checkbox__inner'),
+      label.querySelector && label.querySelector('.option, .el-radio__label, .el-checkbox__label'),
+      label.querySelector && label.querySelector('input'),
+    ];
+    for (const t of targets) {
+      if (!t) continue;
+      if (t.click) {
+        try { t.click(); } catch (e) { /* 继续尝试 */ }
+      }
+      if (isChecked(label)) return true;
+    }
+    return isChecked(label);
+  }
+
+  /**
+   * 一键作答：按当前范围把引擎给出的答案点选上去。
+   * 三条硬约束：不自动交卷、不联网、不动"已经有选择"的题（避免覆盖你自己的作答）。
+   */
+  function runAuto() {
+    const paper = readPaper();
+    if (!paper.length) return;
+    const results = paper.map((q) => engine.solve(q.title, q.opts, (q.imgs || []).map(imgFp)));
+
+    let filled = 0, skipped = [], keptMine = 0;
+    paper.forEach((q, i) => {
+      const r = results[i];
+      // 未命中时带的是"参考"答案，只有把范围切到"全部"才会用它
+      const picks = r.ok ? r.picks : ((r.reference && r.reference.picks) || []);
+      if (!picks.length) { skipped.push(q.n); return; }
+      if (cfg.scope === 'high' && r.tier !== 'high') { skipped.push(q.n); return; }
+      if (cfg.scope === 'mid' && (r.tier !== 'high' && r.tier !== 'mid')) { skipped.push(q.n); return; }
+      if (q.labels.some(isChecked)) { keptMine++; return; }   // 已有选择，不覆盖
+
+      const doneAll = picks.every((k) => isChecked(q.labels[k]) || clickOption(q.labels[k]));
+      if (doneAll) { filled++; autoFilled.add(q.n); } else skipped.push(q.n);
+    });
+
+    lastPaper = paper;
+    lastResults = results;
+    paper.forEach((q, i) => decorate(q, results[i]));
+    renderPanel(paper, results);
+
+    const scopeName = cfg.scope === 'high' ? '只填确信' : (cfg.scope === 'mid' ? '确信+待核对' : '全部（含参考）');
+    const foot = panelEl && panelEl.querySelector('.foot');
+    if (foot) {
+      foot.textContent = '一键作答（' + scopeName + '）：已填 ' + filled + ' 题' +
+        (keptMine ? '，保留你自己的选择 ' + keptMine + ' 题' : '') +
+        (skipped.length ? '，跳过 ' + skipped.length + ' 题（' + skipped.slice(0, 12).join('、') +
+          (skipped.length > 12 ? '…' : '') + '）' : '') + '　—— 未提交，请你自行核对后交卷';
+      setTimeout(() => { if (lastPaper && lastResults) renderPanel(lastPaper, lastResults); }, 8000);
+    }
+  }
 
   /** 导出诊断：把每题的原文与判定细节存成本地 JSON（不上传任何数据） */
   function exportDiag() {
