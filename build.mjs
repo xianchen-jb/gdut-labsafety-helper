@@ -128,9 +128,13 @@ if (existsSync(SRC_BANK)) {
   source = 'data/bank.json';
 }
 
+const coreSrc = readFileSync(CORE, 'utf8');
+const scriptVersion = (coreSrc.match(/@version\s+(\S+)/) || [])[1] || '0.0.0';
+
 const meta = {
   version: '2026-10-15',
   built: new Date().toISOString().slice(0, 10),
+  scriptVersion,
   count: rows.length,
   bankCount,
   extraCount: rows.length - bankCount,
@@ -145,7 +149,7 @@ let engineSrc = readFileSync(ENGINE, 'utf8')
   .replace(/^\/\/[^\n]*\n/gm, '')
   .trim();
 
-let core = readFileSync(CORE, 'utf8');
+let core = coreSrc;
 core = core.replace('/*__BANK__*/[]', bankJson);
 core = core.replace('/*__META__*/{ version: \'dev\', built: \'\', count: 0 }', metaJson);
 core = core.replace('/*__ENGINE__*/', engineSrc);

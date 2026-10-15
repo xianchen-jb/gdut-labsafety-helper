@@ -22,6 +22,7 @@ function makeEl(tag) {
     _q: {},
     _listeners: {},
     _classes: classes,
+    get parentNode() { return this.parentElement; },
     style: { setProperty() {}, removeProperty() {} },
     get className() { return [...classes].join(' '); },
     set className(v) { classes.clear(); String(v).split(/\s+/).filter(Boolean).forEach((c) => classes.add(c)); },
@@ -34,12 +35,22 @@ function makeEl(tag) {
     },
     get innerHTML() { return this._html; },
     set innerHTML(v) { this._html = String(v); indexHtml(this, this._html); },
-    appendChild(c) {
-      this.children.push(c);
-      c.parentElement = this;
+    _register(c) {
       const reg = (key) => { (this._q[key] = this._q[key] || []).push(c); };
       reg(c.tagName);
       [...c._classes].forEach((cls) => reg('.' + cls));
+    },
+    appendChild(c) {
+      this.children.push(c);
+      c.parentElement = this;
+      this._register(c);
+      return c;
+    },
+    insertBefore(c, ref) {
+      const idx = ref ? this.children.indexOf(ref) : -1;
+      if (idx >= 0) this.children.splice(idx, 0, c); else this.children.push(c);
+      c.parentElement = this;
+      this._register(c);
       return c;
     },
     remove() {
@@ -121,7 +132,9 @@ function fakeQuestion(id, title, opts) {
   q.id = id;
   byId[id] = q;
   const titleEl = makeEl('div');
+  titleEl.className = 'question-title';
   titleEl.innerText = title;
+  q.appendChild(titleEl);
   q._titleEl = titleEl;
   q._q['.question-title'] = [titleEl];
   const labels = opts.map((text) => {
@@ -170,7 +183,7 @@ await new Promise((r) => setTimeout(r, 900));
 
 const panel = byId['gdut-helper-panel'] || document.body.children.find((c) => c.id === 'gdut-helper-panel');
 const panelHtml = panel && panel.querySelector('.body') ? panel.querySelector('.body').innerHTML : '';
-const badgeOf = (q) => (q._titleEl.children || []).find((c) => c.className.includes('gdut-helper-badge'));
+const badgeOf = (q) => (q.children || []).find((c) => c.className.includes('gdut-helper-badge'));
 const badge1 = badgeOf(q1);
 const badge2 = badgeOf(q2);
 
@@ -179,8 +192,10 @@ const checks = [
   ['注入了样式', document.head.children.length > 0, ''],
   ['创建了面板', !!panel, ''],
   ['面板列出第1题答案', /应迅速注射强心针/.test(panelHtml), panelHtml.slice(0, 120)],
-  ['第1题标注了 B', !!badge1 && /^✓ B /.test(badge1.textContent), badge1 && badge1.textContent],
-  ['第2题标注了"错"', !!badge2 && badge2.textContent.includes('错'), badge2 && badge2.textContent],
+  ['第1题标注了 B', !!badge1 && /^✓ B /.test(badge1.textContent),
+    'badge=' + (badge1 && badge1.textContent) + ' | q1.children=' + (q1.children || []).map((c) => c.className || c.tagName).join(',')],
+  ['第2题标注了"错"', !!badge2 && badge2.textContent.includes('错'),
+    'badge=' + (badge2 && badge2.textContent) + ' | q2.children=' + (q2.children || []).map((c) => c.className || c.tagName).join(',')],
 ];
 
 // 点击「导出诊断」：先修过"拖拽指针捕获吞掉按钮点击"的 bug，这里做回归保护
@@ -199,6 +214,15 @@ if (exportBtn) {
 checks.push(['导出按钮存在', !!exportBtn, '']);
 checks.push(['点击导出后弹出诊断面板', !!diagText, '']);
 checks.push(['诊断内容包含题目数据', /"items"/.test(diagText) && /应迅速注射强心针/.test(diagText), diagText.slice(0, 80)]);
+
+// 回归：题干不能被脚本自己的徽章污染（v0.4.0 的这个 bug 让 11 道题被误判成未命中）
+let diagTitles = [];
+try { diagTitles = JSON.parse(diagText).items.map((x) => x.title); } catch (e) { diagTitles = []; }
+checks.push([
+  '导出题干未被徽章污染',
+  diagTitles.length > 0 && diagTitles.every((t) => !/\s[图]?[✓≈?]\s/.test(t)),
+  diagTitles.join(' | ').slice(0, 90),
+]);
 
 let ok = true;
 for (const [name, pass, detail] of checks) {

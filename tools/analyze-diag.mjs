@@ -28,7 +28,8 @@ for (const x of items) counts[bucket(x)] = (counts[bucket(x)] || 0) + 1;
 const pct = (n) => (items.length ? ((n / items.length) * 100).toFixed(1) + '%' : '—');
 console.log('诊断归类报告');
 console.log('  文件: ' + file);
-console.log('  版本: ' + (data.version || '?') + '　题库: ' + (data.bank || '?') + ' 题　时间: ' + (data.at || '?'));
+console.log('  脚本版本: ' + (data.script || '（老版本，未上报）') + '　题库版本: ' + (data.version || '?') +
+  '　题库: ' + (data.bank || '?') + ' 题　时间: ' + (data.at || '?'));
 console.log('  共 ' + items.length + ' 题：确信 ' + (counts.high || 0) +
   '（其中图片指纹命中 ' + (counts.clippedByImage || 0) + '）· 待核对 ' + (counts.mid || 0) +
   ' · 仅参考 ' + (counts['ref-only'] || 0) + ' · 无答案 ' + (counts['no-answer'] || 0) +

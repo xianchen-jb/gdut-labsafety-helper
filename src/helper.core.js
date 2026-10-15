@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         广工实验室安全 · 开卷助手（只读标注版）
 // @namespace    local.gdut.labsafety.helper
-// @version      0.4.1
+// @version      0.4.2
 // @description  读取卷面题目，在浮动面板列出答案并高亮正确选项。只标注，不自动点选、不自动交卷。
 // @author       local
 // @match        https://labsafety.gdut.edu.cn/*
@@ -59,7 +59,7 @@
         n: i + 1,
         el,
         titleEl,
-        title: (titleEl.innerText || '').trim(),
+        title: cleanTitle(titleEl),
         labels,
         opts: labels.map((l) => (l.innerText || '').trim()),
         multi: !!el.querySelector('.el-checkbox'),
@@ -69,8 +69,27 @@
     }).filter((q) => q.opts.length >= 2 && q.title);
   }
 
+  /**
+   * 取题干原文：一定要排除脚本自己插进去的徽章。
+   * （v0.4.0 之前徽章挂在 .question-title 里，导致重新扫描时"题干 = 题干+徽章"，
+   *   相似度被拉低，实测把 11 道本该命中的题误判成未命中。）
+   */
+  function cleanTitle(titleEl) {
+    let text = '';
+    try {
+      const clone = titleEl.cloneNode(true);
+      clone.querySelectorAll('.' + PREFIX + '-badge').forEach((n) => n.remove());
+      text = clone.innerText || clone.textContent || '';
+    } catch (e) {
+      text = titleEl.innerText || '';
+    }
+    return text.replace(/\s+$/, '').replace(/^\s+/, '');
+  }
+
   function clearMarks(q) {
     q.el.querySelectorAll('.' + PREFIX + '-badge').forEach((e) => e.remove());
+    if (q.badgeEl && q.badgeEl.parentNode) q.badgeEl.remove();
+    q.badgeEl = null;
     q.labels.forEach((l) => {
       l.classList.remove(PREFIX + '-opt');
       l.style.removeProperty('background');
@@ -122,7 +141,9 @@
         : (kind === 'ref'
           ? '题库未命中；下方是"最接近题目"的答案，仅供参考，请自行核对'
           : '题库里没有这道题（或选项版本不同），需要人工判断'));
-    q.titleEl.appendChild(el);
+    q.badgeEl = el;
+    if (q.titleEl.parentNode) q.titleEl.parentNode.insertBefore(el, q.titleEl.nextSibling);
+    else q.titleEl.appendChild(el);
   }
 
   /* ================================ 样式 ================================ */
@@ -369,6 +390,7 @@
 
     const payload = {
       helper: 'gdut-labsafety-helper',
+      script: META.scriptVersion || '',
       version: META.version || '',
       bank: META.count || BANK.length,
       url: location.hash,
