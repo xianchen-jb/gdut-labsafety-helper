@@ -189,6 +189,22 @@ const cases = [
     opts: ['A. 只影响美观，不属于安全问题', 'B. 应等年度大扫除时统一处理', 'C. 存在长期未清洁的卫生死角，需建立值日制度', 'D. 属于正常现象，无需处理'],
     expect: [2],
   },
+  {
+    name: '考试实录图片指纹·矿泉水瓶',
+    title: '题干被改写得完全不一样，只能靠图',
+    opts: ['A. 塑料瓶不环保', 'B. 实验区禁止饮食，饮用水易与试剂混淆误饮', 'C. 瓶子会遮挡设备散热', 'D. 只是影响台面整洁'],
+    imgFps: ['/chem/api/download/article/202609/m1pzodil1789969796381.jpg'],
+    expect: [1],
+    expectSource: 'image',
+  },
+  {
+    name: '考试实录图片指纹·在用气瓶',
+    title: '题干被改写',
+    opts: ['A. 缺少瓶口防尘帽', 'B. 缺少使用状态牌（满瓶／使用中／空瓶）', 'C. 缺少压力表', 'D. 缺少减压阀'],
+    imgFps: ['/chem/api/download/article/202609/h7nfxsfm1789969801213.jpg'],
+    expect: [1],
+    expectSource: 'image',
+  },
 ];
 
 let pass = 0;

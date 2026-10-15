@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         广工实验室安全 · 开卷助手（只读标注版）
 // @namespace    local.gdut.labsafety.helper
-// @version      0.4.4
+// @version      0.4.5
 // @description  广工实验室安全考试开卷助手：读卷比对内置题库（3066 题），面板列答案并高亮正确选项，支持图片指纹匹配与三级可信度标注。只标注，不自动点选、不自动交卷。
 // @author       local
 // @match        https://labsafety.gdut.edu.cn/*
