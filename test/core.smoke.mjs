@@ -21,6 +21,7 @@ function makeEl(tag) {
     _html: '',
     _q: {},
     _listeners: {},
+    _classes: classes,
     style: { setProperty() {}, removeProperty() {} },
     get className() { return [...classes].join(' '); },
     set className(v) { classes.clear(); String(v).split(/\s+/).filter(Boolean).forEach((c) => classes.add(c)); },
@@ -33,7 +34,14 @@ function makeEl(tag) {
     },
     get innerHTML() { return this._html; },
     set innerHTML(v) { this._html = String(v); indexHtml(this, this._html); },
-    appendChild(c) { this.children.push(c); c.parentElement = this; return c; },
+    appendChild(c) {
+      this.children.push(c);
+      c.parentElement = this;
+      const reg = (key) => { (this._q[key] = this._q[key] || []).push(c); };
+      reg(c.tagName);
+      [...c._classes].forEach((cls) => reg('.' + cls));
+      return c;
+    },
     remove() {
       const p = this.parentElement;
       if (p) p.children = p.children.filter((x) => x !== this);
@@ -44,7 +52,14 @@ function makeEl(tag) {
       const m = /data-act="([^"]+)"/.exec(this._attrs || '');
       return name === 'data-act' && m ? m[1] : null;
     },
-    closest() { return null; },
+    closest(sel) {
+      let n = this;
+      while (n) {
+        if (sel.startsWith('.') ? n._classes.has(sel.slice(1)) : n.tagName === sel.toUpperCase()) return n;
+        n = n.parentElement;
+      }
+      return null;
+    },
     contains(n) { return this.children.includes(n); },
     querySelector(sel) { return (this._q[sel] || [])[0] || null; },
     querySelectorAll(sel) { return this._q[sel] || []; },
@@ -65,6 +80,8 @@ function indexHtml(host, html) {
     const cls = /class="([^"]*)"/.exec(attrs);
     const el = makeEl(tag);
     el._attrs = attrs;
+    el.parentElement = host;
+    (host._q[tag] = host._q[tag] || []).push(el);
     if (cls) {
       cls[1].split(/\s+/).filter(Boolean).forEach((c) => {
         (host._q['.' + c] = host._q['.' + c] || []).push(el);
@@ -165,6 +182,23 @@ const checks = [
   ['第1题标注了 B', !!badge1 && /^✓ B /.test(badge1.textContent), badge1 && badge1.textContent],
   ['第2题标注了"错"', !!badge2 && badge2.textContent.includes('错'), badge2 && badge2.textContent],
 ];
+
+// 点击「导出诊断」：先修过"拖拽指针捕获吞掉按钮点击"的 bug，这里做回归保护
+const exportBtn = (panel && panel._q['button[data-act="export"]'] || [])[0];
+let diagText = '';
+if (exportBtn) {
+  let node = exportBtn;
+  while (node) {
+    (node._listeners.click || []).forEach((fn) => fn({ target: exportBtn }));
+    node = node.parentElement;
+  }
+  const diagBox = panel.querySelector('.diag');
+  const ta = diagBox && diagBox.querySelector('textarea');
+  diagText = (ta && ta.value) || '';
+}
+checks.push(['导出按钮存在', !!exportBtn, '']);
+checks.push(['点击导出后弹出诊断面板', !!diagText, '']);
+checks.push(['诊断内容包含题目数据', /"items"/.test(diagText) && /应迅速注射强心针/.test(diagText), diagText.slice(0, 80)]);
 
 let ok = true;
 for (const [name, pass, detail] of checks) {

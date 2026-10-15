@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         广工实验室安全 · 开卷助手（只读标注版）
 // @namespace    local.gdut.labsafety.helper
-// @version      0.3.0
+// @version      0.3.1
 // @description  读取卷面题目，在浮动面板列出答案并高亮正确选项。只标注，不自动点选、不自动交卷。
 // @author       local
 // @match        https://labsafety.gdut.edu.cn/*
@@ -155,6 +155,13 @@
       '#' + PANEL_ID + ' .todo{margin:2px 6px 6px;padding:5px 8px;border-radius:6px;background:#fff7e6;',
       'border:1px solid #f0d9a8;color:#8a5300;font-size:12px;line-height:1.5;}',
       '#' + PANEL_ID + ' .todo.allok{background:#eefaf1;border-color:#b7e0c6;color:#116b3a;}',
+      '#' + PANEL_ID + ' .diag{position:absolute;left:8px;right:8px;top:38px;bottom:8px;background:#fff;',
+      'border:1px solid #cfd6de;border-radius:6px;display:flex;flex-direction:column;box-shadow:0 4px 14px rgba(16,24,40,.12);}',
+      '#' + PANEL_ID + ' .diag .dh{padding:6px 8px;font-size:12px;color:#374151;border-bottom:1px solid #e3e8ef;}',
+      '#' + PANEL_ID + ' .diag textarea{flex:1;margin:6px;border:1px solid #d3dae3;border-radius:4px;',
+      'font:11px/1.4 Consolas,Monaco,monospace;padding:6px;resize:none;color:#1f2937;}',
+      '#' + PANEL_ID + ' .diag .db{display:flex;gap:6px;padding:6px 8px;border-top:1px solid #e3e8ef;}',
+      '#' + PANEL_ID + '{position:fixed;}',
       '#' + PANEL_ID + ' .foot{padding:6px 10px;border-top:1px solid #e3e8ef;color:#6b7280;font-size:11px;}',
       '.' + PREFIX + '-flash{outline:2px solid #1f9d55;outline-offset:2px;transition:outline .3s ease;}',
     ].join('');
@@ -185,6 +192,16 @@
         if (act === 'toggle') { cfg.collapsed = !cfg.collapsed; saveCfg(); applyCollapsed(); }
         if (act === 'rescan') { scan(true); }
         if (act === 'export') { exportDiag(); }
+        if (act === 'diag-copy') {
+          const ok = copyText(lastDiagText);
+          btn.textContent = ok ? '已复制' : '请手动全选复制';
+          setTimeout(() => { btn.textContent = '复制'; }, 2000);
+        }
+        if (act === 'diag-dl') { btn.textContent = downloadDiag() ? '已下载' : '下载被拦截'; }
+        if (act === 'diag-close') {
+          const box = panelEl.querySelector('.diag');
+          if (box) box.remove();
+        }
         return;
       }
       const row = ev.target.closest && ev.target.closest('.row');
@@ -267,6 +284,8 @@
     let sx = 0, sy = 0, ox = 0, oy = 0, dragging = false;
 
     handle.addEventListener('pointerdown', (ev) => {
+      // 点在按钮上时不要开始拖拽，否则指针捕获会吞掉按钮的 click
+      if (ev.target && ev.target.closest && ev.target.closest('button')) return;
       dragging = true;
       sx = ev.clientX; sy = ev.clientY;
       const r = el.getBoundingClientRect();
@@ -337,25 +356,67 @@
     };
     const text = JSON.stringify(payload, null, 1);
 
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text);
-    } catch (e) { /* 剪贴板不可用就算了 */ }
+    // 不管能不能自动复制/下载，都弹出一个可手动复制的面板，保证一定拿得到
+    showDiag(text);
+  }
 
+  let lastDiagText = '';
+
+  function showDiag(text) {
+    lastDiagText = text;
+    const p = ensurePanel();
+    let box = p.querySelector('.diag');
+    if (!box) {
+      box = document.createElement('div');
+      box.className = 'diag';
+      p.appendChild(box);
+    }
+    box.innerHTML =
+      '<div class="dh">诊断数据（' + (lastResults ? lastResults.length : 0) + ' 题）</div>' +
+      '<textarea readonly spellcheck="false"></textarea>' +
+      '<div class="db">' +
+      '<button data-act="diag-copy">复制</button>' +
+      '<button data-act="diag-dl">下载文件</button>' +
+      '<button data-act="diag-close">关闭</button>' +
+      '</div>';
+    const ta = box.querySelector('textarea');
+    if (ta) {
+      ta.value = text;
+      try { ta.focus(); ta.select(); } catch (e) { /* 忽略 */ }
+    }
+    copyText(text);
+  }
+
+  function copyText(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.setProperty('position', 'fixed');
+    ta.style.setProperty('left', '-9999px');
+    document.body.appendChild(ta);
+    let ok = false;
     try {
-      const blob = new Blob([text], { type: 'application/json' });
+      ta.select();
+      ok = document.execCommand && document.execCommand('copy');
+    } catch (e) { ok = false; }
+    ta.remove();
+    if (!ok) {
+      try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text); } catch (e) { /* 忽略 */ }
+    }
+    return ok;
+  }
+
+  function downloadDiag() {
+    if (!lastDiagText) return false;
+    try {
+      const blob = new Blob([lastDiagText], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = 'gdut-helper-diag-' + new Date().toISOString().slice(0, 19).replace(/[:T]/g, '') + '.json';
       document.body.appendChild(a);
       a.click();
       a.remove();
-    } catch (e) { /* 下载失败时至少已复制到剪贴板 */ }
-
-    const foot = panelEl && panelEl.querySelector('.foot');
-    if (foot) {
-      foot.textContent = '已导出诊断文件（同时复制到剪贴板）· 共 ' + items.length + ' 题';
-      setTimeout(() => { if (lastPaper && lastResults) renderPanel(lastPaper, lastResults); }, 4000);
-    }
+      return true;
+    } catch (e) { return false; }
   }
 
   function isExamPage() {
