@@ -1,0 +1,2906 @@
+{
+ "helper": "gdut-labsafety-helper",
+ "script": "0.4.4",
+ "version": "2026-10-15",
+ "bank": 3066,
+ "url": "#/exam/test/record",
+ "at": "2026-10-15T10:43:54.389Z",
+ "summary": {
+  "total": 80,
+  "high": 79,
+  "byImage": 0,
+  "mid": 0,
+  "refOnly": 0,
+  "noAnswer": 1,
+  "withImage": 2,
+  "missingList": [
+   14
+  ]
+ },
+ "items": [
+  {
+   "n": 1,
+   "title": "使用手持电动工具时，下列哪个措施不正确?（）",
+   "opts": [
+    "A. 使用静电防护毯",
+    "B. 带防护手套",
+    "C. 使用漏电保护器",
+    "D. 穿绝缘鞋"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "A. 使用静电防护毯"
+   ],
+   "reason": "",
+   "bankStem": "使用手持电动工具时，下列哪个措施不正确?（）",
+   "bankOpts": [
+    "A.使用静电防护毯",
+    "B.使用漏电保护器",
+    "C.穿绝缘鞋",
+    "D.带防护手套"
+   ],
+   "bankCk": "1000",
+   "nearest": {
+    "score": 1,
+    "stem": "使用手持电动工具时，下列哪个措施不正确?（）"
+   }
+  },
+  {
+   "n": 2,
+   "title": "消防水箱应贮存（）分钟消防用水量。",
+   "opts": [
+    "A. 6",
+    "B. 8",
+    "C. 10",
+    "D. 12"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    2
+   ],
+   "pickedTexts": [
+    "C. 10"
+   ],
+   "reason": "",
+   "bankStem": "消防水箱应贮存（）分钟消防用水量。",
+   "bankOpts": [
+    "A.6",
+    "B.8",
+    "C.10",
+    "D.12"
+   ],
+   "bankCk": "0010",
+   "nearest": {
+    "score": 0.09,
+    "stem": "公众聚集场所的消防控制室操作人员应实行（）小时值"
+   }
+  },
+  {
+   "n": 3,
+   "title": "漏电保护器可防止？（）",
+   "opts": [
+    "A. 触电事故",
+    "B. 电压波动",
+    "C. 电流过大",
+    "D. 双手触电事故"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "A. 触电事故"
+   ],
+   "reason": "",
+   "bankStem": "漏电保护器可防止？（）",
+   "bankOpts": [
+    "A.触电事故",
+    "B.电压波动",
+    "C.电流过大",
+    "D.双手触电事故"
+   ],
+   "bankCk": "1000",
+   "nearest": {
+    "score": 0.65,
+    "stem": "漏电保护器的使用是防止（）。"
+   }
+  },
+  {
+   "n": 4,
+   "title": "通过人身的安全直流电流规定在（）以下。",
+   "opts": [
+    "A. 10mA",
+    "B. 20mA",
+    "C. 40mA",
+    "D. 50mA"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    3
+   ],
+   "pickedTexts": [
+    "D. 50mA"
+   ],
+   "reason": "",
+   "bankStem": "通过人身的安全直流电流规定在（）以下。",
+   "bankOpts": [
+    "A.10mA",
+    "B.20mA",
+    "C.40mA",
+    "D.50mA"
+   ],
+   "bankCk": "0001",
+   "nearest": {
+    "score": 0.14,
+    "stem": "低压验电笔一般适用于交、直流电压为（）伏以下。"
+   }
+  },
+  {
+   "n": 5,
+   "title": "数控电火花线切割机床在正常加工时，突然有烧焦气味从机床电器柜中传出，应采取哪种处理措施？（）",
+   "opts": [
+    "A. 顺着烧焦味道查找",
+    "B. 用专用灭火器向电器柜喷射",
+    "C. 不与理睬继续加工",
+    "D. 关闭机床总电源后查找原因"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    3
+   ],
+   "pickedTexts": [
+    "D. 关闭机床总电源后查找原因"
+   ],
+   "reason": "",
+   "bankStem": "数控电火花线切割机床在正常加工时，突然有烧焦气味从机床电器柜中传出，应采取哪种处理措施？（）",
+   "bankOpts": [
+    "A.顺着烧焦味道查找",
+    "B.用专用灭火器向电器柜喷射",
+    "C.不与理睬继续加工",
+    "D.关闭机床总电源后查找原因"
+   ],
+   "bankCk": "0001",
+   "nearest": {
+    "score": 0.25,
+    "stem": "电火花线切割机床加工零件中，遇突然断丝应采取的措"
+   }
+  },
+  {
+   "n": 6,
+   "title": "下列（）火灾不能用水扑灭",
+   "opts": [
+    "A. 棉布、家具",
+    "B. 金属钾、钠",
+    "C. 木材、纸张",
+    "D. 无"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "B. 金属钾、钠"
+   ],
+   "reason": "",
+   "bankStem": "下列（）火灾不能用水扑灭",
+   "bankOpts": [
+    "A.棉布、家具",
+    "B.金属钾、钠",
+    "C.木材、纸张",
+    "D.无"
+   ],
+   "bankCk": "0100",
+   "nearest": {
+    "score": 0.25,
+    "stem": "泡沫灭火器不能用于扑救（）火灾。"
+   }
+  },
+  {
+   "n": 7,
+   "title": "下列不是影响混合物爆炸极限的因素是（）。",
+   "opts": [
+    "A. 混合物的温度、压力",
+    "B. 混合物的多少",
+    "C. 混合物的含氧量",
+    "D. 容器的大小"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "B. 混合物的多少"
+   ],
+   "reason": "",
+   "bankStem": "下列不是影响混合物爆炸极限的因素是（）。",
+   "bankOpts": [
+    "A.混合物的温度、压力",
+    "B.混合物的多少",
+    "C.混合物的含氧量",
+    "D.容器的大小"
+   ],
+   "bankCk": "0100",
+   "nearest": {
+    "score": 0.89,
+    "stem": "下列哪项不是影响混合物爆炸极限的因素？（）"
+   }
+  },
+  {
+   "n": 8,
+   "title": "实验室内的汞蒸气会造成人员慢性中毒，为了减少汞液面的蒸发，可在汞液面上覆盖什么液体，效果最好？（）",
+   "opts": [
+    "A. 水液体",
+    "B. 甘油",
+    "C. 5%Na2SH2O",
+    "D. 无"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "B. 甘油"
+   ],
+   "reason": "",
+   "bankStem": "实验室内的汞蒸气会造成人员慢性中毒，为了减少汞液面的蒸发，可在汞液面上覆盖什么液体，效果最好？（）",
+   "bankOpts": [
+    "A.水液体",
+    "B.甘油",
+    "C.5%Na2SH2O",
+    "D.无"
+   ],
+   "bankCk": "0100",
+   "nearest": {
+    "score": 0.46,
+    "stem": "实验室内的汞蒸气会造成人员慢性重毒，为了减少汞液"
+   }
+  },
+  {
+   "n": 9,
+   "title": "充装气瓶时，以下哪项操作不正确？（）",
+   "opts": [
+    "A. 检查气瓶内是否有剩余压力",
+    "B. 两种气体混装一瓶",
+    "C. 注意气瓶的漆色和字样",
+    "D. 无"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "B. 两种气体混装一瓶"
+   ],
+   "reason": "",
+   "bankStem": "充装气瓶时，以下哪项操作不正确?（）",
+   "bankOpts": [
+    "A.检查气瓶内是否有剩余压力",
+    "B.两种气体混装一瓶",
+    "C.注意气瓶的漆色和字样",
+    "D.无"
+   ],
+   "bankCk": "0100",
+   "nearest": {
+    "score": 0.22,
+    "stem": "取用化学药品时，以下哪些事项操作是正确的？（）"
+   }
+  },
+  {
+   "n": 10,
+   "title": "安全电压是指保证不会对人体产生致命危险的电压值，工业中使用的安全电压是（）以下？",
+   "opts": [
+    "A. 25V",
+    "B. 36V",
+    "C. 50V",
+    "D. 110V"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "B. 36V"
+   ],
+   "reason": "",
+   "bankStem": "安全电压是指保证不会对人体产生致命危险的电压值，工业中使用的安全电压是（）以下？",
+   "bankOpts": [
+    "A.25V",
+    "B.36V",
+    "C.50V",
+    "D.110V"
+   ],
+   "bankCk": "0100",
+   "nearest": {
+    "score": 0.54,
+    "stem": "在供电中，万一发生电击（触电）事故为了保证不至于"
+   }
+  },
+  {
+   "n": 11,
+   "title": "学生开始参与实验室工作前接受实验室安全教育的规定？（）",
+   "opts": [
+    "A. 有条件的可以进行安全教育",
+    "B. 必须进行安全教育",
+    "C. 无",
+    "D. 无"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "B. 必须进行安全教育"
+   ],
+   "reason": "",
+   "bankStem": "学生开始参与实验室工作前接受实验室安全教育的规定？（）",
+   "bankOpts": [
+    "A.有条件的可以进行安全教育",
+    "B.必须进行安全教育",
+    "C.无",
+    "D.无"
+   ],
+   "bankCk": "0100",
+   "nearest": {
+    "score": 0.23,
+    "stem": "学生进入实验室学习、工作前应接受安全教育、培训，"
+   }
+  },
+  {
+   "n": 12,
+   "title": "下列（）方法是保护人身安全的最后一道防线。",
+   "opts": [
+    "A. 个体防护",
+    "B. 隔离",
+    "C. 避难",
+    "D. 救援"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "A. 个体防护"
+   ],
+   "reason": "",
+   "bankStem": "下列（）方法是保护人身安全的最后一道防线。",
+   "bankOpts": [
+    "A.个体防护",
+    "B.隔离",
+    "C.避难",
+    "D.救援"
+   ],
+   "bankCk": "1000",
+   "nearest": {
+    "score": 0.06,
+    "stem": "下列哪种处置实验服的方法是错误的？（）"
+   }
+  },
+  {
+   "n": 13,
+   "title": "搬运气瓶时，应该（）。",
+   "opts": [
+    "A. 戴好瓶帽，轻装轻卸",
+    "B. 随便挪动",
+    "C. 无具体安全规定",
+    "D. 无"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "A. 戴好瓶帽，轻装轻卸"
+   ],
+   "reason": "",
+   "bankStem": "搬运气瓶时，应该（）。",
+   "bankOpts": [
+    "A.戴好瓶帽，轻装轻卸",
+    "B.随便挪动",
+    "C.无具体安全规定",
+    "D.无"
+   ],
+   "bankCk": "1000",
+   "nearest": {
+    "score": 0.24,
+    "stem": "使用剧毒药品时应该（）。"
+   }
+  },
+  {
+   "n": 14,
+   "title": "图中实验台上出现矿泉水瓶，为什么被判为隐患？",
+   "opts": [
+    "A. 塑料瓶不环保",
+    "B. 实验区禁止饮食，饮用水易与试剂混淆误饮",
+    "C. 瓶子会遮挡设备散热",
+    "D. 只是影响台面整洁"
+   ],
+   "img": true,
+   "imgSrcs": [
+    "https://labsafety.gdut.edu.cn/chem/api/download/ARTICLE/202609/M1PZoDil1789969796381.jpg"
+   ],
+   "imgFps": [
+    "/chem/api/download/article/202609/m1pzodil1789969796381.jpg"
+   ],
+   "multi": false,
+   "tier": "none",
+   "source": "none",
+   "conf": null,
+   "stemSim": null,
+   "optSim": null,
+   "picks": [],
+   "pickedTexts": [],
+   "reason": "选项与题库版本不一致",
+   "bankStem": "图中实验室的环境状况，整改要求是？",
+   "bankOpts": [
+    "属于个人物品，不便干预",
+    "全面整理并建立值日制度定期保洁",
+    "只需在检查前突击打扫一次",
+    "由物业负责，实验室无需管理"
+   ],
+   "bankCk": "0100",
+   "nearest": {
+    "score": 0.07,
+    "stem": "图中实验室的环境状况，整改要求是？"
+   }
+  },
+  {
+   "n": 15,
+   "title": "搬运气瓶时，应该（）。",
+   "opts": [
+    "A. 戴好瓶帽，轻装轻卸",
+    "B. 随便挪动",
+    "C. 无具体安全规定",
+    "D. 无"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "A. 戴好瓶帽，轻装轻卸"
+   ],
+   "reason": "",
+   "bankStem": "搬运气瓶时，应该（）。",
+   "bankOpts": [
+    "A.戴好瓶帽，轻装轻卸",
+    "B.随便挪动",
+    "C.无具体安全规定",
+    "D.无"
+   ],
+   "bankCk": "1000",
+   "nearest": {
+    "score": 0.24,
+    "stem": "使用剧毒药品时应该（）。"
+   }
+  },
+  {
+   "n": 16,
+   "title": "电火花线切割机床加工零件时，工作液开关应（）。",
+   "opts": [
+    "A. 开启",
+    "B. 关闭",
+    "C. 中间空挡",
+    "D. 根据加工材料和速度等选择开启或关闭"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "A. 开启"
+   ],
+   "reason": "",
+   "bankStem": "电火花线切割机床加工零件时，工作液开关应（）。",
+   "bankOpts": [
+    "A.开启",
+    "B.关闭",
+    "C.中间空挡",
+    "D.根据加工材料和速度等选择开启或关闭"
+   ],
+   "bankCk": "1000",
+   "nearest": {
+    "score": 0.28,
+    "stem": "电火花线切割机床加工零件中，遇突然断丝应采取的措"
+   }
+  },
+  {
+   "n": 17,
+   "title": "安全电压最高是（）。",
+   "opts": [
+    "A. 24V",
+    "B. 36V",
+    "C. 42V",
+    "D. 60V"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    2
+   ],
+   "pickedTexts": [
+    "C. 42V"
+   ],
+   "reason": "",
+   "bankStem": "安全电压最高是（）。",
+   "bankOpts": [
+    "A.24V",
+    "B.36V",
+    "C.42V",
+    "D.60V"
+   ],
+   "bankCk": "0010",
+   "nearest": {
+    "score": 0.23,
+    "stem": "在供电中，万一发生电击（触电）事故为了保证不至于"
+   }
+  },
+  {
+   "n": 18,
+   "title": "实验室是大学生创新实践的重要平台，是一个重要的公共场所，进入实验室开展研究工作时，应做到（）。",
+   "opts": [
+    "A. 实验室内禁止进餐",
+    "B. 做好实验室安全使用登记，并管护好自己的财物",
+    "C. 做好场地清洁，注意用水用电安全",
+    "D. 以上都对"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    3
+   ],
+   "pickedTexts": [
+    "D. 以上都对"
+   ],
+   "reason": "",
+   "bankStem": "实验室是大学生创新实践的重要平台，是一个重要的公共场所，进入实验室开展研究工作时，应做到（）。",
+   "bankOpts": [
+    "A.实验室内禁止进餐",
+    "B.做好实验室安全使用登记，并管护好自己的财物",
+    "C.做好场地清洁，注意用水用电安全",
+    "D.以上都对"
+   ],
+   "bankCk": "0001",
+   "nearest": {
+    "score": 0.9,
+    "stem": "实验室是大学生创新实践的重要平台，是一个重要的公"
+   }
+  },
+  {
+   "n": 19,
+   "title": "起模针及气孔针在使用后，应该（）。",
+   "opts": [
+    "A. 针尖朝下放入工具箱内",
+    "B. 针尖朝上放入工具箱内",
+    "C. 插入型砂堆中",
+    "D. 不用注意"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "A. 针尖朝下放入工具箱内"
+   ],
+   "reason": "",
+   "bankStem": "起模针及气孔针在使用后，应该（）。",
+   "bankOpts": [
+    "A.针尖朝下放入工具箱内",
+    "B.针尖朝上放入工具箱内",
+    "C.插入型砂堆中",
+    "D.不用注意"
+   ],
+   "bankCk": "1000",
+   "nearest": {
+    "score": 0.29,
+    "stem": "起模针及气孔针在使用后，应注意针尖朝下放入工具箱"
+   }
+  },
+  {
+   "n": 20,
+   "title": "停电检修时，在一经合闸即可送电到工作地点的开关或刀闸的操作把手上，应悬挂（）警示牌。",
+   "opts": [
+    "A. 在此工作",
+    "B. 止步，高压危险",
+    "C. 禁止合闸，有人工作",
+    "D. 无"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    2
+   ],
+   "pickedTexts": [
+    "C. 禁止合闸，有人工作"
+   ],
+   "reason": "",
+   "bankStem": "停电检修时，在一经合闸即可送电到工作地点的开关或刀闸的操作把手上，应悬挂（）警示牌。",
+   "bankOpts": [
+    "A.在此工作",
+    "B.止步，高压危险",
+    "C.禁止合闸，有人工作",
+    "D.无"
+   ],
+   "bankCk": "0010",
+   "nearest": {
+    "score": 0.14,
+    "stem": "操作旋转加工设备时，要求穿着紧身合适的工作服，因"
+   }
+  },
+  {
+   "n": 21,
+   "title": "图中这瓶在用气瓶缺少了什么？",
+   "opts": [
+    "A. 缺少瓶口防尘帽",
+    "B. 缺少使用状态牌（满瓶／使用中／空瓶）",
+    "C. 缺少压力表",
+    "D. 缺少减压阀"
+   ],
+   "img": true,
+   "imgSrcs": [
+    "https://labsafety.gdut.edu.cn/chem/api/download/ARTICLE/202609/h7nfXsfM1789969801213.jpg"
+   ],
+   "imgFps": [
+    "/chem/api/download/article/202609/h7nfxsfm1789969801213.jpg"
+   ],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "B. 缺少使用状态牌（满瓶／使用中／空瓶）"
+   ],
+   "reason": "",
+   "bankStem": "图中这瓶在用气瓶缺少了什么？",
+   "bankOpts": [
+    "缺少瓶口防尘帽",
+    "缺少使用状态牌（满瓶／使用中／空瓶）",
+    "缺少压力表",
+    "缺少减压阀"
+   ],
+   "bankCk": "0100",
+   "nearest": {
+    "score": 0.1,
+    "stem": "从图中气瓶标签信息判断，这瓶气存在什么问题？"
+   }
+  },
+  {
+   "n": 22,
+   "title": "长期搁置不用的Ⅰ类手持电动工具，在使用前必须测量绝缘电阻，要求手持电动工具带电部分与外壳之间绝缘电阻不低于（）MΩ？",
+   "opts": [
+    "A. 2",
+    "B. 0.5",
+    "C. 1",
+    "D. 10"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "A. 2"
+   ],
+   "reason": "",
+   "bankStem": "长期搁置不用的Ⅰ类手持电动工具，在使用前必须测量绝缘电阻，要求手持电动工具带电部分与外壳之间绝缘电阻不低于（）MΩ？",
+   "bankOpts": [
+    "A.2",
+    "B.0.5",
+    "C.1",
+    "D.10"
+   ],
+   "bankCk": "1000",
+   "nearest": {
+    "score": 0.07,
+    "stem": "使用手持电动工具时，下列哪个措施不正确?（）"
+   }
+  },
+  {
+   "n": 23,
+   "title": "公共娱乐场所安全出口的疏散门应（）。",
+   "opts": [
+    "A. 自由开启",
+    "B. 向外开启",
+    "C. 向内开启",
+    "D. 无"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "B. 向外开启"
+   ],
+   "reason": "",
+   "bankStem": "公共娱乐场所安全出口的疏散门应（）。",
+   "bankOpts": [
+    "A.自由开启",
+    "B.向外开启",
+    "C.向内开启",
+    "D.无"
+   ],
+   "bankCk": "0100",
+   "nearest": {
+    "score": 0.62,
+    "stem": "实验大楼安全出口的疏散门应（）。"
+   }
+  },
+  {
+   "n": 24,
+   "title": "按照国家工程建筑消防技术标准施工的项目竣工时，（）经公安消防机构进行消防验收。",
+   "opts": [
+    "A. 必须",
+    "B. 可以",
+    "C. 应当",
+    "D. 无"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "A. 必须"
+   ],
+   "reason": "",
+   "bankStem": "按照国家工程建筑消防技术标准施工的项目竣工时，（）经公安消防机构进行消防验收。",
+   "bankOpts": [
+    "A.必须",
+    "B.可以",
+    "C.应当",
+    "D.无"
+   ],
+   "bankCk": "1000",
+   "nearest": {
+    "score": 0.94,
+    "stem": "按照国家工程建筑消防技术标准施工的项目竣工时，（"
+   }
+  },
+  {
+   "n": 25,
+   "title": "低压验电笔一般适用于交、直流电压为（）伏以下。",
+   "opts": [
+    "A. 220",
+    "B. 380",
+    "C. 500",
+    "D. 580"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    2
+   ],
+   "pickedTexts": [
+    "C. 500"
+   ],
+   "reason": "",
+   "bankStem": "低压验电笔一般适用于交、直流电压为（）伏以下。",
+   "bankOpts": [
+    "A.220",
+    "B.380",
+    "C.500",
+    "D.580"
+   ],
+   "bankCk": "0010",
+   "nearest": {
+    "score": 0.66,
+    "stem": "低压电笔一般适用于（）V 以下的交流电压？"
+   }
+  },
+  {
+   "n": 26,
+   "title": "怎样正确安全使用台灯？（）",
+   "opts": [
+    "A. 灯泡功率不得超过60瓦",
+    "B. 不能用纸做灯罩",
+    "C. 远离可燃物",
+    "D. 长时间持续点亮"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": true,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0,
+    1,
+    2
+   ],
+   "pickedTexts": [
+    "A. 灯泡功率不得超过60瓦",
+    "B. 不能用纸做灯罩",
+    "C. 远离可燃物"
+   ],
+   "reason": "",
+   "bankStem": "怎样正确安全使用台灯？（）",
+   "bankOpts": [
+    "A.灯泡功率不得超过60瓦",
+    "B.不能用纸做灯罩",
+    "C.远离可燃物",
+    "D.长时间持续点亮"
+   ],
+   "bankCk": "1110",
+   "nearest": {
+    "score": 0.9,
+    "stem": "怎样正确安全使用台灯？（）"
+   }
+  },
+  {
+   "n": 27,
+   "title": "大量集中使用气瓶应注意哪些问题？（）",
+   "opts": [
+    "A. 不必要设置符合要求的集中存放室",
+    "B. 根据气瓶介质情况采取必要的防火、防爆、防电打火（包括静电）、防毒、防辐射等措施",
+    "C. 通风要良好，要有必要的报警装置",
+    "D. 无"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": true,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1,
+    2
+   ],
+   "pickedTexts": [
+    "B. 根据气瓶介质情况采取必要的防火、防爆、防电打火（包括静电）、防毒、防辐射等措施",
+    "C. 通风要良好，要有必要的报警装置"
+   ],
+   "reason": "",
+   "bankStem": "大量集中使用气瓶应注意哪些问题？（）",
+   "bankOpts": [
+    "A.不必要设置符合要求的集中存放室",
+    "B.根据气瓶介质情况采取必要的防火、防爆、防电打火（包括静电）、防毒、防辐射等措施",
+    "C.通风要良好，要有必要的报警装置",
+    "D.无"
+   ],
+   "bankCk": "0110",
+   "nearest": {
+    "score": 0.28,
+    "stem": "租用压力气瓶要注意哪些问题（）？"
+   }
+  },
+  {
+   "n": 28,
+   "title": "怎样正确使用压力气瓶（）？",
+   "opts": [
+    "A. 压力气瓶要放置稳固、防止倾倒，要避免碰撞、烘烤和曝晒",
+    "B. 不得对压力气瓶进行焊接或改造，不得更改气瓶的钢印或颜色标记",
+    "C. 易燃、易爆或有毒介质的压力气瓶，可以放心地安放在室内使用",
+    "D. 开阀时要慢慢开启，防止附件升压过快"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": true,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0,
+    1,
+    3
+   ],
+   "pickedTexts": [
+    "A. 压力气瓶要放置稳固、防止倾倒，要避免碰撞、烘烤和曝晒",
+    "B. 不得对压力气瓶进行焊接或改造，不得更改气瓶的钢印或颜色标记",
+    "D. 开阀时要慢慢开启，防止附件升压过快"
+   ],
+   "reason": "",
+   "bankStem": "怎样正确使用压力气瓶（）？",
+   "bankOpts": [
+    "A.压力气瓶要放置稳固、防止倾倒，要避免碰撞、烘烤和曝晒",
+    "B.不得对压力气瓶进行焊接或改造，不得更改气瓶的钢印或颜色标记",
+    "C.易燃、易爆或有毒介质的压力气瓶，可以放心地安放在室内使用",
+    "D.开阀时要慢慢开启，防止附件升压过快"
+   ],
+   "bankCk": "1101",
+   "nearest": {
+    "score": 0.27,
+    "stem": "怎样正确安全使用台灯？（）"
+   }
+  },
+  {
+   "n": 29,
+   "title": "进行线切割加工，应注意（）。",
+   "opts": [
+    "A. 安装工件时不要碰断电极丝",
+    "B. 先走丝，再开启工作液，最后接通高频电源",
+    "C. 工件的位置要正确，以免超程",
+    "D. 必须在切断高频电源后才能进行安装工件等操作"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": true,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "pickedTexts": [
+    "A. 安装工件时不要碰断电极丝",
+    "B. 先走丝，再开启工作液，最后接通高频电源",
+    "C. 工件的位置要正确，以免超程",
+    "D. 必须在切断高频电源后才能进行安装工件等操作"
+   ],
+   "reason": "",
+   "bankStem": "进行线切割加工，应注意（）。",
+   "bankOpts": [
+    "A.安装工件时不要碰断电极丝",
+    "B.先走丝，再开启工作液，最后接通高频电源",
+    "C.工件的位置要正确，以免超程",
+    "D.必须在切断高频电源后才能进行安装工件等操作"
+   ],
+   "bankCk": "1111",
+   "nearest": {
+    "score": 0.26,
+    "stem": "进行线切割加工前应安装好防护罩，因为（）。"
+   }
+  },
+  {
+   "n": 30,
+   "title": "往玻璃管上套橡皮管或橡皮塞时，应做到（）。",
+   "opts": [
+    "A. 管端应烧圆滑",
+    "B. 沾少量水或甘油于橡皮管或橡皮塞内部",
+    "C. 用布裹手或带厚手套，以防割伤",
+    "D. 无"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": true,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0,
+    1,
+    2
+   ],
+   "pickedTexts": [
+    "A. 管端应烧圆滑",
+    "B. 沾少量水或甘油于橡皮管或橡皮塞内部",
+    "C. 用布裹手或带厚手套，以防割伤"
+   ],
+   "reason": "",
+   "bankStem": "往玻璃管上套橡皮管或橡皮塞时，应做到（）。",
+   "bankOpts": [
+    "A.管端应烧圆滑",
+    "B.沾少量水或甘油于橡皮管或橡皮塞内部",
+    "C.用布裹手或带厚手套，以防割伤",
+    "D.无"
+   ],
+   "bankCk": "1110",
+   "nearest": {
+    "score": 0.51,
+    "stem": "往玻璃管上套橡皮管（塞）时，不正确的做法是（）。"
+   }
+  },
+  {
+   "n": 31,
+   "title": "使用铣床加工工件时要注意（）。",
+   "opts": [
+    "A. 铣深槽时，退刀必须先停车",
+    "B. 工作台有行程限位撞块，操作前必须预先调整好",
+    "C. 加工完成后，应卸下工件、刀具，清扫工作台，关闭机器电源",
+    "D. 完成加工后通常将横向拖板靠内移进，纵向拖板居中放置"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": true,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "pickedTexts": [
+    "A. 铣深槽时，退刀必须先停车",
+    "B. 工作台有行程限位撞块，操作前必须预先调整好",
+    "C. 加工完成后，应卸下工件、刀具，清扫工作台，关闭机器电源",
+    "D. 完成加工后通常将横向拖板靠内移进，纵向拖板居中放置"
+   ],
+   "reason": "",
+   "bankStem": "使用铣床加工工件时要注意（）。",
+   "bankOpts": [
+    "A.铣深槽时，退刀必须先停车",
+    "B.工作台有行程限位撞块，操作前必须预先调整好",
+    "C.加工完成后，应卸下工件、刀具，清扫工作台，关闭机器电源",
+    "D.完成加工后通常将横向拖板靠内移进，纵向拖板居中放置"
+   ],
+   "bankCk": "1111",
+   "nearest": {
+    "score": 0.26,
+    "stem": "在使用数控机床加工零件时，应注意（）。"
+   }
+  },
+  {
+   "n": 32,
+   "title": "实验室中常常用到一些压力容器（如高压反应釜、气体钢瓶等），下列被严格禁止的行为是？（）",
+   "opts": [
+    "A. 带压拆卸压紧螺栓",
+    "B. 气体钢瓶螺栓受冻，不能拧开，可以考虑用火烧烤",
+    "C. 在搬动、存放、更换气体钢瓶时不安装防震垫圈",
+    "D. 学生在没有经过培训、没有老师在场指导的情况下使用气瓶"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": true,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "pickedTexts": [
+    "A. 带压拆卸压紧螺栓",
+    "B. 气体钢瓶螺栓受冻，不能拧开，可以考虑用火烧烤",
+    "C. 在搬动、存放、更换气体钢瓶时不安装防震垫圈",
+    "D. 学生在没有经过培训、没有老师在场指导的情况下使用气瓶"
+   ],
+   "reason": "",
+   "bankStem": "实验室中常常用到一些压力容器（如高压反应釜、气体钢瓶等），下列被严格禁止的行为是？（）",
+   "bankOpts": [
+    "A.带压拆卸压紧螺栓",
+    "B.气体钢瓶螺栓受冻，不能拧开，可以考虑用火烧烤",
+    "C.在搬动、存放、更换气体钢瓶时不安装防震垫圈",
+    "D.学生在没有经过培训、没有老师在场指导的情况下使用气瓶"
+   ],
+   "bankCk": "1111",
+   "nearest": {
+    "score": 0.12,
+    "stem": "微生物学实验室禁止的行为包括（）。"
+   }
+  },
+  {
+   "n": 33,
+   "title": "电气设备发生火灾时，应注意电气设备可能带电，可能发生触电事故。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "电气设备发生火灾时，应注意电气设备可能带电，可能发生触电事故。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.74,
+    "stem": "电气设备发生火灾时，应注意：电气设备可能带电，可"
+   }
+  },
+  {
+   "n": 34,
+   "title": "高校实验室发生安全事故的主要原因有：操作不慎，粗心大意，设施老化，缺少防护设施等。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "高校实验室发生安全事故的主要原因有：操作不慎，粗心大意，设施老化，缺少防护设施等。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.72,
+    "stem": "高校实验室发生安全事故的主要原因有：操作不慎、设"
+   }
+  },
+  {
+   "n": 35,
+   "title": "在设备停止运行期间，可对设备按钮进行转动、调节。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "在设备停止运行期间，可对设备按钮进行转动、调节。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.62,
+    "stem": "对试验机上的按钮感兴趣，在设备停止期间，可以尝试"
+   }
+  },
+  {
+   "n": 36,
+   "title": "卫生的实验室工作环境，仅仅是实验工作人员的责任。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "卫生的实验室工作环境，仅仅是实验工作人员的责任。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.9,
+    "stem": "创造安全、卫生的实验室工作环境，仅仅是实验工作人"
+   }
+  },
+  {
+   "n": 37,
+   "title": "雷电发生时，如果作业人员孤立处于暴露区时，应该立即双手抱膝下蹲，向前弯曲。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "雷电发生时，如果作业人员孤立处于暴露区时，应该立即双手抱膝下蹲，向前弯曲。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.84,
+    "stem": "雷电发生时，如果作业人员孤立处于暴露区并感到头发"
+   }
+  },
+  {
+   "n": 38,
+   "title": "不得堵塞实验室逃生通道。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "不得堵塞实验室逃生通道。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.49,
+    "stem": "实验室不得乱拉电线，套接接线板。"
+   }
+  },
+  {
+   "n": 39,
+   "title": "操作者使用机床时，需要集中注意力，防止事故发生。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "操作者使用机床时，需要集中注意力，防止事故发生。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.6,
+    "stem": "操作者使用机床时，要避开铁屑飞溅的方向。"
+   }
+  },
+  {
+   "n": 40,
+   "title": "发生火灾时可用布条等保护手心，顺绳滑下，或下到未着火的楼层进行逃生。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "发生火灾时可用布条等保护手心，顺绳滑下，或下到未着火的楼层进行逃生。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.57,
+    "stem": "火灾发生后，千万不要盲目跳楼，可利用疏散楼梯、阳"
+   }
+  },
+  {
+   "n": 41,
+   "title": "早晨、中饭、晚上等几个人员稀少的时间段，要特别注意随手关门，确保实验室财产和个人物品的安全。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "早晨、中饭、晚上等几个人员稀少的时间段，要特别注意随手关门，确保实验室财产和个人物品的安全。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.47,
+    "stem": "实验室内可以堆放个人物品。"
+   }
+  },
+  {
+   "n": 42,
+   "title": "工作人员在进入BSL-3实验室工作区前，应在专用的更衣室穿着背开式工作服或其他防护服。工作完毕必须脱下工作服，不得穿工作服离开实验室。可再次使用的工作服必须先消毒后清洗。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "工作人员在进入BSL-3实验室工作区前，应在专用的更衣室穿着背开式工作服或其他防护服。工作完毕必须脱下工作服，不得穿工作服离开实验室。可再次使用的工作服必须先消毒后清洗。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 1,
+    "stem": "工作人员在进入BSL-3实验室工作区前，应在专用"
+   }
+  },
+  {
+   "n": 43,
+   "title": "锻造操作时思想要集中，掌钳者必须夹牢和放稳工件，并控制锤击方向。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "锻造操作时思想要集中，掌钳者必须夹牢和放稳工件，并控制锤击方向。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.92,
+    "stem": "手工锻造时思想要集中，掌钳者必须夹牢和放稳工件，"
+   }
+  },
+  {
+   "n": 44,
+   "title": "所有操作或接触放射性核素的实验室人员应接受放射性基础知识、相关技术和放射性防护的指导和培训。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "所有操作或接触放射性核素的实验室人员应接受放射性基础知识、相关技术和放射性防护的指导和培训。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.81,
+    "stem": "所有操作或接触放射性核素的实验室人员应接受放射性"
+   }
+  },
+  {
+   "n": 45,
+   "title": "离开实验室前，应关闭设备、关水、关电。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "离开实验室前，应关闭设备、关水、关电。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.51,
+    "stem": "离开放射性实验室前必须洗手。"
+   }
+  },
+  {
+   "n": 46,
+   "title": "化学类实验室原则上不得使用明火电炉。确须使用明火电炉进行实验的，须向所在学院和实验室与设备管理处申报，经审核批准备案后，方可使用。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "化学类实验室原则上不得使用明火电炉。确须使用明火电炉进行实验的，须向所在学院和实验室与设备管理处申报，经审核批准备案后，方可使用。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.84,
+    "stem": "化学类实验室原则上不得使用明火电炉。确须使用明火"
+   }
+  },
+  {
+   "n": 47,
+   "title": "可用向容器表面冲浇凉水的物理方法使容器较快降温降压。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "可用向容器表面冲浇凉水的物理方法使容器较快降温降压。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.43,
+    "stem": "消毒剂经常用于无生命的物体或物体表面。"
+   }
+  },
+  {
+   "n": 48,
+   "title": "湿手不能触摸带电的电器，不能用湿布擦拭使用中的电器。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "湿手不能触摸带电的电器，不能用湿布擦拭使用中的电器。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.49,
+    "stem": "不能用铁柄毛刷清扫电源开关和用湿布擦电源开关。"
+   }
+  },
+  {
+   "n": 49,
+   "title": "可以使用明火（如：电炉煤气）或没有控温装置的加热设备直接加热有机溶剂，进行重结晶或溶液浓缩操作。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "可以使用明火（如：电炉煤气）或没有控温装置的加热设备直接加热有机溶剂，进行重结晶或溶液浓缩操作。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.56,
+    "stem": "可以使用明火在敞口容器当中加热有机溶剂。"
+   }
+  },
+  {
+   "n": 50,
+   "title": "烘箱等加热、产热设备附近放置纸板、化学试剂、气体钢瓶等物品。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "烘箱等加热、产热设备附近放置纸板、化学试剂、气体钢瓶等物品。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.9,
+    "stem": "不得在冰箱、烘箱等加热、产热设备附近放置纸板、化"
+   }
+  },
+  {
+   "n": 51,
+   "title": "移动某些非固定安装的电气设备时(如电风扇，照明灯)，可以不必切断电源。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "移动某些非固定安装的电气设备时(如电风扇，照明灯)，可以不必切断电源。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.51,
+    "stem": "使用电气设备时可以用两眼插头代替三眼插头。"
+   }
+  },
+  {
+   "n": 52,
+   "title": "设备和人体都可靠接地。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "设备和人体都可靠接地。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.73,
+    "stem": "设备和人体都对地绝缘。"
+   }
+  },
+  {
+   "n": 53,
+   "title": "为了防止盗窃事件的发生，临时离开实验室必须关门。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "为了防止盗窃事件的发生，临时离开实验室必须关门。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.48,
+    "stem": "离开放射性实验室前必须洗手。"
+   }
+  },
+  {
+   "n": 54,
+   "title": "安全阀每年校验一次并铅封。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "安全阀每年校验一次并铅封。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.45,
+    "stem": "压力容器上安全阀下可以随意加底阀。"
+   }
+  },
+  {
+   "n": 55,
+   "title": "实验结束后，要关闭设备，断开电源，并将有关实验用品整理好。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "实验结束后，要关闭设备，断开电源，并将有关实验用品整理好。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.95,
+    "stem": "实验结束，要关闭设备，断开电源，并将有关实验用品"
+   }
+  },
+  {
+   "n": 56,
+   "title": "水电线路、门窗等是否完好，如发现问题，必须及时进行维修。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "水电线路、门窗等是否完好，如发现问题，必须及时进行维修。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.79,
+    "stem": "实验室人员必须定期检查设备、水电线路、门窗等是否"
+   }
+  },
+  {
+   "n": 57,
+   "title": "电火花机床开机后可以用手同时分别触摸两电极。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "电火花机床开机后可以用手同时分别触摸两电极。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.8,
+    "stem": "电火花机床开机后可以触摸两电极。"
+   }
+  },
+  {
+   "n": 58,
+   "title": "压力容器内盛装的介质是汽液混合态。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "压力容器内盛装的介质是汽液混合态。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.47,
+    "stem": "压力容器上安全阀下可以随意加底阀。"
+   }
+  },
+  {
+   "n": 59,
+   "title": "生物类实验室废弃物（包括动物残体等），可以丢弃在普通垃圾箱内。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "生物类实验室废弃物（包括动物残体等），可以丢弃在普通垃圾箱内。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 1,
+    "stem": "生物类实验室废弃物，可以丢弃在普通垃圾箱内。"
+   }
+  },
+  {
+   "n": 60,
+   "title": "灭菌锅等无水干烧。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "灭菌锅等无水干烧。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.87,
+    "stem": "严禁灭菌锅等无水干烧。"
+   }
+  },
+  {
+   "n": 61,
+   "title": "在任何情况下，起吊的重物之下严禁站人。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "在任何情况下，起吊的重物之下严禁站人。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.48,
+    "stem": "在没有指导老师同意的情况下，严禁乱动现场任何机床"
+   }
+  },
+  {
+   "n": 62,
+   "title": "在大型结构实验室从事研究工作的人员需在指定区域内工作。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "在大型结构实验室从事研究工作的人员需在指定区域内工作。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.47,
+    "stem": "从事辐射工作的人员，只要经过专业知识的培训就可上"
+   }
+  },
+  {
+   "n": 63,
+   "title": "设备，以及擅自开始实验。实验时，应注意安全，按要求操作，如发现异常立即停止。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "设备，以及擅自开始实验。实验时，应注意安全，按要求操作，如发现异常立即停止。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.81,
+    "stem": "未经指导教师许可，不得搬弄仪器、设备，以及擅自开"
+   }
+  },
+  {
+   "n": 64,
+   "title": "消防器材要放置在明显和便于拿取的位置，严禁把消防器材移作他用。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "消防器材要放置在明显和便于拿取的位置，严禁把消防器材移作他用。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.66,
+    "stem": "实验室必须配备符合本室要求的消防器材，消防器材要"
+   }
+  },
+  {
+   "n": 65,
+   "title": "实验室门口应挂上写有安全责任人的姓名和联系方式的牌子。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "实验室门口应挂上写有安全责任人的姓名和联系方式的牌子。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.45,
+    "stem": "创造安全、卫生的实验室工作环境，仅仅是实验工作人"
+   }
+  },
+  {
+   "n": 66,
+   "title": "灭火的四钟方法是隔离法、窒息法、冷却法、化学抑制法。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "灭火的四钟方法是隔离法、窒息法、冷却法、化学抑制法。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.67,
+    "stem": "火灾扑救的基本方法有：窒息法、冷却法、隔离法、抑"
+   }
+  },
+  {
+   "n": 67,
+   "title": "机床操作时必须带好手套，做好防护工作",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "机床操作时必须带好手套，做好防护工作",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.65,
+    "stem": "机床操作作业人员操作时必须戴手套。"
+   }
+  },
+  {
+   "n": 68,
+   "title": "电路谐振时，电容的电压可以是电源电压的几倍。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "电路谐振时，电容的电压可以是电源电压的几倍。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.48,
+    "stem": "机床照明可使用220V电压的电源。"
+   }
+  },
+  {
+   "n": 69,
+   "title": "浇注期间，其他同学不用让开通道，或可站在身旁观看。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "浇注期间，其他同学不用让开通道，或可站在身旁观看。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.46,
+    "stem": "铁锹不用时插牢，使用过程中注意不要伤到其他同学。"
+   }
+  },
+  {
+   "n": 70,
+   "title": "试验废液必须集中，交学校统一处理。由专门机构通过化学方法处理，使其变为无害物质，尽量减少对环境的污染。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "试验废液必须集中，交学校统一处理。由专门机构通过化学方法处理，使其变为无害物质，尽量减少对环境的污染。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.97,
+    "stem": "试验废液必须集中，交学校统一处理。由专门机构通过"
+   }
+  },
+  {
+   "n": 71,
+   "title": "溅入口中已下咽的毒物，应根据毒物的性质服解毒剂，并立即送医院。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "溅入口中已下咽的毒物，应根据毒物的性质服解毒剂，并立即送医院。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.58,
+    "stem": "实验中溅入口中而尚未下咽的毒物，应立即吐出，并用"
+   }
+  },
+  {
+   "n": 72,
+   "title": "可以将无毒无害试剂当作有毒有害试剂处理。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "可以将无毒无害试剂当作有毒有害试剂处理。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.5,
+    "stem": "因处理废液费用很高，应将无毒无害试剂与有毒有害试"
+   }
+  },
+  {
+   "n": 73,
+   "title": "电气线路着火，要先切断电源，再用干粉灭火器或二氧化碳灭火器灭火，不可直接泼水灭火，以防触电或电气爆炸伤人。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "电气线路着火，要先切断电源，再用干粉灭火器或二氧化碳灭火器灭火，不可直接泼水灭火，以防触电或电气爆炸伤人。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.88,
+    "stem": "电器或线路着火，要先切断电源，再用干粉灭火器或气"
+   }
+  },
+  {
+   "n": 74,
+   "title": "打开氨水、硝酸、盐酸等药品瓶封口时，应先盖上湿布，用冷水冷却后再开瓶塞，以防溅出，尤其在夏天更应注意。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "打开氨水硝酸盐酸等药品瓶封口时，应先盖上湿布，用冷水冷却后再开瓶塞，以防溅出，尤其在夏天更应注意。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.94,
+    "stem": "硝酸、盐酸等药品瓶封口时，应先盖上湿布，用冷水冷"
+   }
+  },
+  {
+   "n": 75,
+   "title": "对于触电事故，应立即切断电源或用有绝缘性能的木棍棒挑开和隔绝电流，如果触电者的衣服干燥，又没有紧缠住身上，可以用一只手抓住他的衣服，拉离带电体；但救护人不得接触触电者的皮肤，也不能抓他的鞋。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "对于触电事故，应立即切断电源或用有绝缘性能的木棍棒挑开和隔绝电流，如果触电者的衣服干燥，又没有紧缠住身上，可以用一只手抓住他的衣服，拉离带电体；但救护人不得接触触电者的皮肤，也不能抓他的鞋。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.72,
+    "stem": "对于触电事故，应立即切断电源或用有绝缘性能的木棍"
+   }
+  },
+  {
+   "n": 76,
+   "title": "烘箱、微波炉、电磁炉、饮水加热器、灭菌锅等高热能电器设备的放置地点应远离易燃、易爆物品。同时，规范操作，避免饮水加热器、灭菌锅等无水干烧。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "烘箱、微波炉、电磁炉、饮水加热器、灭菌锅等高热能电器设备的放置地点应远离易燃、易爆物品。同时，规范操作，避免饮水加热器、灭菌锅等无水干烧。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.53,
+    "stem": "饮水加热器、灭菌锅等可以无水干烧。"
+   }
+  },
+  {
+   "n": 77,
+   "title": "室外消防栓的作用：专供消防车取水。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "室外消防栓的作用：专供消防车取水。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.48,
+    "stem": "消防接合器的作用：当水池，水箱无水时，由消防车通"
+   }
+  },
+  {
+   "n": 78,
+   "title": "机械设备运转时，可以进行上油和保养。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    1
+   ],
+   "pickedTexts": [
+    "错"
+   ],
+   "reason": "",
+   "bankStem": "机械设备运转时，可以进行上油和保养。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "01",
+   "nearest": {
+    "score": 0.62,
+    "stem": "对机械传动的设备，可以在设备运转时进行变速。"
+   }
+  },
+  {
+   "n": 79,
+   "title": "物质燃烧需要具备的三个条件是：可燃物；助燃物；着火源。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "物质燃烧需要具备的三个条件是：可燃物；助燃物；着火源。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.48,
+    "stem": "燃烧必须具备可燃物、助燃物和点火源三大条件，缺一"
+   }
+  },
+  {
+   "n": 80,
+   "title": "实验室内电气设备及线路设施必须严格符合安全用电规程，不许乱接、乱拉电线，墙上电源未经允许，不得拆装、改线。",
+   "opts": [
+    "对",
+    "错"
+   ],
+   "img": false,
+   "imgSrcs": [],
+   "imgFps": [],
+   "multi": false,
+   "tier": "high",
+   "source": "text",
+   "conf": 1,
+   "stemSim": 1,
+   "optSim": 1,
+   "picks": [
+    0
+   ],
+   "pickedTexts": [
+    "对"
+   ],
+   "reason": "",
+   "bankStem": "实验室内电气设备及线路设施必须严格符合安全用电规程，不许乱接、乱拉电线，墙上电源未经允许，不得拆装、改线。",
+   "bankOpts": [
+    "对",
+    "错"
+   ],
+   "bankCk": "10",
+   "nearest": {
+    "score": 0.87,
+    "stem": "实验室内电气设备及线路设施必须严格按照安全用电规"
+   }
+  }
+ ]
+}
