@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         广工实验室安全 · 开卷助手（只读标注版）
 // @namespace    local.gdut.labsafety.helper
-// @version      0.4.2
+// @version      0.4.3
 // @description  读取卷面题目，在浮动面板列出答案并高亮正确选项。只标注，不自动点选、不自动交卷。
 // @author       local
 // @match        https://labsafety.gdut.edu.cn/*
