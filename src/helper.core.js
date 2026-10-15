@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         广工实验室安全 · 开卷助手（只读标注版）
 // @namespace    local.gdut.labsafety.helper
-// @version      0.3.1
+// @version      0.4.0
 // @description  读取卷面题目，在浮动面板列出答案并高亮正确选项。只标注，不自动点选、不自动交卷。
 // @author       local
 // @match        https://labsafety.gdut.edu.cn/*
@@ -52,6 +52,9 @@
     return nodes.map((el, i) => {
       const titleEl = el.querySelector('.question-title') || el;
       const labels = [...el.querySelectorAll('.question-options label')];
+      const imgs = [...el.querySelectorAll('img')]
+        .map((im) => im.currentSrc || im.src || '')
+        .filter(Boolean);
       return {
         n: i + 1,
         el,
@@ -60,7 +63,8 @@
         labels,
         opts: labels.map((l) => (l.innerText || '').trim()),
         multi: !!el.querySelector('.el-checkbox'),
-        hasImg: !!el.querySelector('img'),
+        imgs,
+        hasImg: imgs.length > 0,
       };
     }).filter((q) => q.opts.length >= 2 && q.title);
   }
@@ -102,7 +106,8 @@
     const letters = res.picks.map((i) => LETTERS[i]).join('');
     const texts = res.picks.map((i) => stripLead(q.opts[i])).join(' / ');
     const tail = res.partial ? '（部分匹配）' : '';
-    if (res.tier === 'mid') badge(q, '≈ ' + letters + ' ' + texts + ' · 建议核对' + tail, 'mid');
+    if (res.source === 'image') badge(q, '图✓ ' + letters + ' ' + texts + ' · 图片指纹命中' + tail, 'ok');
+    else if (res.tier === 'mid') badge(q, '≈ ' + letters + ' ' + texts + ' · 建议核对' + tail, 'mid');
     else badge(q, '✓ ' + letters + ' ' + texts + tail, 'ok');
   }
 
@@ -333,25 +338,42 @@
         title: q.title.replace(/\s+/g, ' '),
         opts: q.opts.map((o) => o.replace(/\s+/g, ' ')),
         img: q.hasImg,
+        imgSrcs: (q.imgs || []).map((s) => String(s).slice(0, 300)),
+        imgFps: (q.imgs || []).map(imgFp),
         multi: q.multi,
         tier: r.ok ? r.tier : 'none',
+        source: r.ok ? (r.source || 'text') : 'none',
         conf: r.conf != null ? r.conf : (r.reference ? r.reference.score : null),
         stemSim: r.stemSim != null ? r.stemSim : (r.reference ? r.reference.stemSim : null),
         optSim: r.optSim != null ? r.optSim : null,
         picks,
         pickedTexts: pickTexts(q, picks),
+        reason: r.ok ? '' : (r.reference && r.reference.picks.length ? 'low-similarity' : (r.reason || 'no-answer')),
         bankStem: bank ? bank[0] : '',
         bankOpts: bank ? bank[1] : [],
         bankCk: bank ? bank[2] : '',
         nearest: r.nearest || null,
       };
     });
+
+    const summary = {
+      total: items.length,
+      high: items.filter((x) => x.tier === 'high' && x.source === 'text').length,
+      byImage: items.filter((x) => x.source === 'image').length,
+      mid: items.filter((x) => x.tier === 'mid').length,
+      refOnly: items.filter((x) => x.tier === 'none' && x.pickedTexts.length).length,
+      noAnswer: items.filter((x) => x.tier === 'none' && !x.pickedTexts.length).length,
+      withImage: items.filter((x) => x.img).length,
+      missingList: items.filter((x) => x.tier !== 'high' || x.source === 'image').map((x) => x.n),
+    };
+
     const payload = {
       helper: 'gdut-labsafety-helper',
       version: META.version || '',
       bank: META.count || BANK.length,
       url: location.hash,
       at: new Date().toISOString(),
+      summary,
       items,
     };
     const text = JSON.stringify(payload, null, 1);
@@ -434,7 +456,7 @@
 
     busy = true;
     try {
-      const results = paper.map((q) => engine.solve(q.title, q.opts));
+      const results = paper.map((q) => engine.solve(q.title, q.opts, (q.imgs || []).map(imgFp)));
       lastPaper = paper;
       lastResults = results;
       paper.forEach((q, i) => decorate(q, results[i]));

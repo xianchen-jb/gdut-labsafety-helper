@@ -56,6 +56,27 @@ export function stripLead(s) {
   return String(s == null ? '' : s).replace(/^\s*[A-DＡ-Ｄ][\.．、，,：:)\s]*/, '').trim();
 }
 
+/**
+ * 图片指纹：去掉域名与缓存参数后的路径 + 关键查询参数。
+ * 同一张图在不同页面/不同域名下通常路径一致，可用来直接锁定题目。
+ */
+export function imgFp(src) {
+  const s = String(src == null ? '' : src).trim();
+  if (!s) return '';
+  if (s.startsWith('data:')) return 'data:' + s.slice(5, 45);
+  try {
+    const u = new URL(s, 'https://placeholder.local');
+    const drop = new Set(['t', 'ts', 'timestamp', '_', 'v', 'ver', 'time', 'random', 'r', 'sign', 'expires']);
+    const params = [...u.searchParams.entries()]
+      .filter(([k]) => !drop.has(k.toLowerCase()))
+      .sort((a, b) => (a[0] < b[0] ? -1 : 1));
+    const q = params.map(([k, v]) => k + '=' + v).join('&');
+    return u.pathname.toLowerCase() + (q ? '?' + q : '');
+  } catch (e) {
+    return s.replace(/[?#].*$/, '').toLowerCase();
+  }
+}
+
 /* ============================== 相似度 ============================== */
 
 const setCache = new Map();
@@ -129,6 +150,7 @@ export function createEngine(rows, options = {}) {
   const stemExactCore = new Map(); // 去括号题干 -> idx[]
   const stemPrefix = new Map();    // 前 6 字 -> idx[]
   const grams2 = new Map();        // 2-gram -> idx[]
+  const imgIndex = new Map();      // 图片指纹 -> idx[]
 
   const stemN = new Array(rows.length);
   const stemC = new Array(rows.length);
@@ -141,6 +163,15 @@ export function createEngine(rows, options = {}) {
     stemC[i] = core;
     optsN[i] = row[1].map((o) => norm(stripLead(o)));
     row.__i = i;
+
+    const fps = row[3];
+    if (fps) {
+      (Array.isArray(fps) ? fps : [fps]).forEach((fp) => {
+        if (!fp) return;
+        if (!imgIndex.has(fp)) imgIndex.set(fp, []);
+        imgIndex.get(fp).push(i);
+      });
+    }
 
     for (const [map, key] of [[stemExact, full], [stemExactCore, core]]) {
       if (!key) continue;
@@ -298,9 +329,37 @@ export function createEngine(rows, options = {}) {
   const STEM_GATE_MID = options.stemMid != null ? options.stemMid : 0.85;
 
   /** 解题主入口：tier = high（题库确信）/ mid（建议核对）/ none（未命中，给参考） */
-  function solve(title, pageOpts) {
+  function solve(title, pageOpts, pageImgFps) {
     const ranked = rank(title, pageOpts, { top: 3 });
     const best = ranked.find((c) => c.picks.length > 0);
+
+    // 图片指纹优先：同一张图 = 同一道题，直接给答案
+    const refs = (pageImgFps || []).filter(Boolean);
+    let imgHit = null;
+    for (const fp of refs) {
+      const list = imgIndex.get(fp);
+      if (!list || !list.length) continue;
+      const m = mapPicks(rows[list[0]], pageOpts);
+      if (m.picks.length) { imgHit = { idx: list[0], picks: m.picks, partial: m.partial, missing: m.missing, fp }; break; }
+    }
+    if (imgHit) {
+      return {
+        ok: true,
+        tier: 'high',
+        source: 'image',
+        picks: imgHit.picks,
+        conf: 1,
+        stemSim: 1,
+        optSim: 1,
+        entry: rows[imgHit.idx],
+        nearest: null,
+        partial: imgHit.partial,
+        missing: imgHit.missing,
+        imgFp: imgHit.fp,
+      };
+    }
+
+    const imgFps = refs;
 
     if (!best) {
       const top = ranked[0];
@@ -310,6 +369,7 @@ export function createEngine(rows, options = {}) {
         reason: top ? '选项与题库版本不一致' : '题库未命中',
         nearest: top ? { score: +top.score.toFixed(2), stem: top.entry[0].slice(0, 24) } : null,
         entry: top ? top.entry : null,
+        imgFps,
       };
     }
 
@@ -327,10 +387,10 @@ export function createEngine(rows, options = {}) {
     };
 
     if (best.score >= HIGH || best.stemSim >= STEM_GATE_HIGH) {
-      return { ok: true, tier: 'high', ...base };
+      return { ok: true, tier: 'high', source: 'text', ...base, imgFps };
     }
     if (best.score >= MID || best.stemSim >= STEM_GATE_MID) {
-      return { ok: true, tier: 'mid', ...base };
+      return { ok: true, tier: 'mid', source: 'text', ...base, imgFps };
     }
 
     // 未命中，但把最接近题目的答案作为"参考"一起返回（明确标注，不冒充题库答案）
@@ -340,8 +400,9 @@ export function createEngine(rows, options = {}) {
       reason: '相似度不足',
       reference: { ...base, score: base.conf },
       nearest: { score: base.conf, stem: best.entry[0].slice(0, 24) },
+      imgFps,
     };
   }
 
-  return { solve, rank, size: rows.length, thresholds: { HIGH, MID, STEM_GATE_HIGH, STEM_GATE_MID } };
+  return { solve, rank, size: rows.length, imgIndex, thresholds: { HIGH, MID, STEM_GATE_HIGH, STEM_GATE_MID } };
 }

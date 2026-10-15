@@ -19,6 +19,16 @@ if (ei >= 0) {
 const { createEngine, LETTERS } = await import(engineUrl);
 
 const rows = JSON.parse(readFileSync(resolve(here, '../data/bank.json'), 'utf8'));
+
+// 追加一条"带图片指纹"的合成题，用于验证图片指纹优先匹配
+const IMG_FP = '/chem/api/file/unit-test-img-0001.png';
+rows.push([
+  '图中这道合成测试题存在什么隐患？',
+  ['A. 甲处隐患', 'B. 乙处隐患', 'C. 丙处隐患'],
+  '010',
+  [IMG_FP],
+]);
+
 const engine = createEngine(rows);
 
 const cases = [
@@ -144,6 +154,21 @@ const cases = [
     opts: ['A. 水', 'B. 二氧化碳灭火器', 'C. 砂子', 'D. 干粉灭火器'],
     expectRef: [1],
   },
+  {
+    name: '图片指纹·文字对不上也能直接命中',
+    title: '一段和题库完全不同的题干文字，只有图片是同一张？',
+    opts: ['A. 甲处隐患', 'B. 乙处隐患', 'C. 丙处隐患'],
+    imgFps: [IMG_FP],
+    expect: [1],
+    expectSource: 'image',
+  },
+  {
+    name: '图片指纹·指纹不认识时不误判',
+    title: '一段和题库完全不同的题干文字，图片也是陌生的？',
+    opts: ['A. 甲处隐患', 'B. 乙处隐患', 'C. 丙处隐患'],
+    imgFps: ['/chem/api/file/never-seen.png'],
+    expect: false,
+  },
 ];
 
 let pass = 0;
@@ -151,8 +176,12 @@ const fails = [];
 const tierOf = [];
 
 for (const c of cases) {
-  const res = engine.solve(c.title, c.opts);
+  const res = engine.solve(c.title, c.opts, c.imgFps);
   tierOf.push(`${c.name.split('·')[0]}=${res.tier}${res.ok ? '(' + res.conf + ')' : ''}`);
+  if (c.expectSource && res.source !== c.expectSource) {
+    fails.push(`${c.name}: 期望来源 ${c.expectSource}，实际 ${res.source}`);
+    continue;
+  }
   if (c.expectRef) {
     const got = res.reference ? res.reference.picks : null;
     if (!res.ok && got && JSON.stringify(got) === JSON.stringify(c.expectRef)) pass++;

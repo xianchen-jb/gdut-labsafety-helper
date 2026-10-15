@@ -57,6 +57,13 @@ function buildRows() {
   const rows = [];
   const seen = new Set();
 
+  // 图片来源：imgFp 优先；img 是字符串时也按指纹处理（布尔 img 表示"这题有图"但没存地址）
+  const imgOf = (e) => {
+    const v = e.imgFp != null ? e.imgFp : (typeof e.img === 'string' ? e.img : '');
+    if (Array.isArray(v)) return v.filter(Boolean);
+    return v ? [v] : [];
+  };
+
   for (const e of readJsonl(SRC_BANK)) {
     if (!e || !e.t || !Array.isArray(e.ops) || e.ops.length < 2) continue;
     const ck = (e.ck && e.ck.length === e.ops.length) ? e.ck : toCk(e.a, e.ops);
@@ -64,7 +71,8 @@ function buildRows() {
     const key = norm(e.t) + '|' + e.ops.map(norm).join('|');
     if (seen.has(key)) continue;
     seen.add(key);
-    rows.push([e.t, e.ops, ck]);
+    const imgs = imgOf(e);
+    rows.push(imgs.length ? [e.t, e.ops, ck, imgs] : [e.t, e.ops, ck]);
   }
   const bankCount = rows.length;
 
@@ -77,7 +85,8 @@ function buildRows() {
       const key = norm(e.t) + '|' + e.opts.map(norm).join('|');
       if (seen.has(key)) continue;
       seen.add(key);
-      rows.push([e.t, e.opts, ck]);
+      const imgs = imgOf(e);
+      rows.push(imgs.length ? [e.t, e.opts, ck, imgs] : [e.t, e.opts, ck]);
     }
   }
   return { rows, bankCount };
