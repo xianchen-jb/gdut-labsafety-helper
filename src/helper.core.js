@@ -77,7 +77,8 @@
   function decorate(q, res) {
     clearMarks(q);
     if (!res.ok) {
-      badge(q, '⚠ ' + res.reason, 'warn');
+      const hint = res.nearest && res.nearest.score ? '，最接近 ' + res.nearest.score : '';
+      badge(q, '? ' + res.reason + hint, 'none');
       return;
     }
     if (cfg.highlight) {
@@ -91,7 +92,9 @@
     }
     const letters = res.picks.map((i) => LETTERS[i]).join('');
     const texts = res.picks.map((i) => stripLead(q.opts[i])).join(' / ');
-    badge(q, '✓ ' + letters + ' ' + texts, 'ok');
+    const tail = res.partial ? '（部分匹配）' : '';
+    if (res.tier === 'mid') badge(q, '≈ ' + letters + ' ' + texts + ' · 建议核对' + tail, 'mid');
+    else badge(q, '✓ ' + letters + ' ' + texts + tail, 'ok');
   }
 
   function badge(q, text, kind) {
@@ -99,8 +102,8 @@
     el.className = PREFIX + '-badge ' + PREFIX + '-badge-' + kind;
     el.textContent = text;
     el.title = kind === 'ok'
-      ? '来自题库：' + (META.version || '')
-      : '题库里没有这道题（或选项版本不同），需要人工判断';
+      ? '题库精确命中（' + (META.version || '') + '）'
+      : (kind === 'mid' ? '题库里找到相近题目，答案仅供参考，请自行核对' : '题库里没有这道题（或选项版本不同），需要人工判断');
     q.titleEl.appendChild(el);
   }
 
@@ -114,7 +117,8 @@
       '.' + PREFIX + '-badge{display:inline-block;margin:6px 0 0 8px;padding:1px 8px;border-radius:6px;',
       'font-size:12px;line-height:18px;vertical-align:middle;max-width:100%;}',
       '.' + PREFIX + '-badge-ok{background:#e7f6ec;color:#116b3a;border:1px solid #94d3ae;}',
-      '.' + PREFIX + '-badge-warn{background:#fff4e5;color:#8a5300;border:1px solid #f0c07a;}',
+      '.' + PREFIX + '-badge-mid{background:#fff4e5;color:#8a5300;border:1px solid #f0c07a;}',
+      '.' + PREFIX + '-badge-none{background:#f1f3f5;color:#5b6470;border:1px solid #d6dbe1;}',
       '.' + PREFIX + '-opt{transition:background .15s ease;}',
       '#' + PANEL_ID + '{position:fixed;right:16px;bottom:16px;width:340px;max-width:92vw;background:#fff;',
       'border:1px solid #d8dee6;border-radius:8px;box-shadow:0 8px 24px rgba(16,24,40,.16);',
@@ -130,7 +134,8 @@
       '#' + PANEL_ID + ' .row:hover{background:#f2f5f9;}',
       '#' + PANEL_ID + ' .row i{font-style:normal;color:#6b7280;min-width:22px;text-align:right;}',
       '#' + PANEL_ID + ' .row .a{font-weight:600;color:#116b3a;min-width:16px;}',
-      '#' + PANEL_ID + ' .row.bad .a{color:#b45309;}',
+      '#' + PANEL_ID + ' .row .a.mid{color:#b45309;}',
+      '#' + PANEL_ID + ' .row.bad .a.none{color:#8b95a1;}',
       '#' + PANEL_ID + ' .row span{flex:1;color:#374151;}',
       '#' + PANEL_ID + ' .foot{padding:6px 10px;border-top:1px solid #e3e8ef;color:#6b7280;font-size:11px;}',
       '.' + PREFIX + '-flash{outline:2px solid #1f9d55;outline-offset:2px;transition:outline .3s ease;}',
@@ -191,20 +196,28 @@
 
   function renderPanel(paper, results) {
     const p = ensurePanel();
-    const okCount = results.filter((r) => r.ok).length;
+    const highCount = results.filter((r) => r.tier === 'high').length;
+    const midCount = results.filter((r) => r.tier === 'mid').length;
+    const noneCount = results.length - highCount - midCount;
     p.querySelector('.body').innerHTML = paper.map((q, i) => {
       const r = results[i];
       if (r.ok) {
         const letters = r.picks.map((x) => LETTERS[x]).join('');
         const text = r.picks.map((x) => stripLead(q.opts[x])).join(' / ');
-        return '<div class="row" data-n="' + q.n + '"><i>' + q.n + '.</i><em class="a">' + letters +
-          '</em><span>' + esc(text) + '</span></div>';
+        const cls = r.tier === 'mid' ? 'a mid' : 'a';
+        const mark = r.tier === 'mid' ? '≈' + letters : letters;
+        return '<div class="row" data-n="' + q.n + '"><i>' + q.n + '.</i><em class="' + cls + '">' + mark +
+          '</em><span>' + esc(text) + (r.partial ? '（部分匹配）' : '') + '</span></div>';
       }
-      return '<div class="row bad" data-n="' + q.n + '"><i>' + q.n + '.</i><em class="a">?</em><span>' +
-        esc(r.reason) + '</span></div>';
+      const hint = r.nearest && r.nearest.stem
+        ? ' · 最接近：' + esc(r.nearest.stem) + '…（' + r.nearest.score + '）'
+        : '';
+      return '<div class="row bad" data-n="' + q.n + '"><i>' + q.n + '.</i><em class="a none">?</em><span>' +
+        esc(r.reason) + hint + '</span></div>';
     }).join('');
     p.querySelector('.foot').textContent =
-      '命中 ' + okCount + '/' + paper.length + '　题库 ' + (META.count || BANK.length) + ' 题 · ' + (META.built || '');
+      '确信 ' + highCount + ' · 待核对 ' + midCount + ' · 未命中 ' + noneCount +
+      '　题库 ' + (META.count || BANK.length) + ' 题 · ' + (META.built || '');
   }
 
   function esc(s) {

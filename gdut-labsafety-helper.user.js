@@ -37,180 +37,300 @@
 
   const LETTERS = 'ABCDEFGH';
 
-function norm(s) {
-  return String(s == null ? '' : s)
-    .replace(/\s+/g, '')
-    .replace(/[，,。.、；;：:（）()\[\]“”"'’‘《》<>【】\-—－_～~?？!！]/g, '')
-    .toLowerCase();
+/* ============================== 归一化 ============================== */
+
+const TRAD = {
+  試: '试', 驗: '验', 氣: '气', 溫: '温', 熱: '热', 電: '电', 與: '与', 體: '体', 鋼: '钢',
+  滅: '灭', 爐: '炉', 壓: '压', 機: '机', 設: '设', 備: '备', 檢: '检', 測: '测', 標: '标',
+  規: '规', 範: '范', 訂: '订', 製: '制', 廠: '厂', 務: '务', 員: '员', 學: '学', 習: '习',
+  實: '实', 際: '际', 產: '产', 業: '业', 專: '专', 門: '门', 關: '关', 開: '开', 閉: '闭',
+  護: '护', 裝: '装', 質: '质', 報: '报', 險: '险', 環: '环', 節: '节', 約: '约', 廢: '废',
+  棄: '弃', 處: '处', 劑: '剂', 藥: '药', 傷: '伤', 閥: '阀', 軟: '软', 線: '线', 絕: '绝',
+  觸: '触', 風: '风', 鍋: '锅', 濾: '滤', 統: '统', 類: '类', 導: '导', 燒: '烧', 斷: '断',
+  對: '对', 錯: '错', 無: '无', 個: '个', 們: '们', 於: '于', 為: '为', 後: '后', 麵: '面',
+};
+
+const SYNONYMS = [
+  ['钢瓶', '气瓶'],
+  ['触电', '电击'],
+];
+
+const CN_NUM = { 一: '1', 二: '2', 两: '2', 三: '3', 四: '4', 五: '5', 六: '6', 七: '7', 八: '8', 九: '9', 十: '10' };
+
+const PUNCT = /[，,。.、；;：:（）()\[\]【】“”"'’‘《》<>「」\-—－_～~?？!！\/\\|+*#@$%^&=]/g;
+
+const WIDTH_MAP = (() => {
+  const m = new Map();
+  for (let i = 0xff01; i <= 0xff5e; i++) m.set(String.fromCharCode(i), String.fromCharCode(i - 0xfee0));
+  m.set('　', ' ');
+  return m;
+})();
+
+/** 完整归一化：全角→半角、繁→简、同义词、数字单位统一、去空白标点 */
+function norm(raw) {
+  let s = String(raw == null ? '' : raw);
+  s = s.replace(/[\uff01-\uff5e\u3000]/g, (c) => WIDTH_MAP.get(c) || c);
+  s = s.split('').map((c) => TRAD[c] || c).join('');
+  s = s.replace(/(\d+)\s*(度|摄氏度)/g, '$1℃');
+  s = s.replace(/[一二两三四五六七八九十]/g, (c) => CN_NUM[c] || c);
+  for (const group of SYNONYMS) {
+    for (let i = 1; i < group.length; i++) s = s.split(group[i]).join(group[0]);
+  }
+  return s.replace(/\s+/g, '').replace(PUNCT, '').toLowerCase();
+}
+
+/** 去掉括号注记后的"核心题干"（很多改写题只差在括号部分） */
+function coreOf(raw) {
+  return norm(String(raw == null ? '' : raw).replace(/[（(【\[][^）)】\]]*[）)】\]]/g, ''));
 }
 
 function stripLead(s) {
   return String(s == null ? '' : s).replace(/^\s*[A-DＡ-Ｄ][\.．、，,：:)\s]*/, '').trim();
 }
 
-const gramCache = new Map();
+/* ============================== 相似度 ============================== */
 
-function gramsOf(s) {
-  let set = gramCache.get(s);
+const setCache = new Map();
+
+function ngramSet(s, n) {
+  const key = n + ':' + s;
+  let set = setCache.get(key);
   if (set) return set;
   set = new Set();
-  for (let i = 0; i + 6 <= s.length; i++) set.add(s.slice(i, i + 6));
-  if (gramCache.size < 40000) gramCache.set(s, set);
+  for (let i = 0; i + n <= s.length; i++) set.add(s.slice(i, i + n));
+  if (setCache.size < 120000) setCache.set(key, set);
   return set;
 }
 
-function similarity(a, b) {
+/** n-gram Jaccard 相似度（短串天然退化：完全相等为 1，否则 0） */
+function jaccard(a, b, n = 2) {
   if (!a || !b) return 0;
   if (a === b) return 1;
-  const A = gramsOf(a);
-  const B = gramsOf(b);
+  const A = ngramSet(a, n);
+  const B = ngramSet(b, n);
   if (!A.size || !B.size) return 0;
   let inter = 0;
-  A.forEach((g) => { if (B.has(g)) inter++; });
-  return inter / Math.max(A.size, B.size);
+  const [small, big] = A.size <= B.size ? [A, B] : [B, A];
+  small.forEach((g) => { if (big.has(g)) inter++; });
+  return inter / (A.size + B.size - inter);
 }
 
-/**
- * 在卷面选项里找到与题库选项对应的下标。
- * 顺序：完全相同 -> 前缀包含 -> 6-gram 相似度 >= 0.6
- */
-function findOption(want, pageNorm) {
-  if (!want) return -1;
-  let j = pageNorm.indexOf(want);
-  if (j >= 0) return j;
-  if (want.length >= 4) {
-    j = pageNorm.findIndex((x) => x && x.length >= 4 && (x.startsWith(want) || want.startsWith(x)));
-    if (j >= 0) return j;
+/** 最长公共子序列占比（对中文短句比 n-gram 更稳） */
+function lcsRatio(a, b) {
+  if (!a || !b) return 0;
+  if (a === b) return 1;
+  const n = a.length, m = b.length;
+  if (n * m > 40000) return jaccard(a, b, 2);
+  let prev = new Array(m + 1).fill(0);
+  let cur = new Array(m + 1).fill(0);
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= m; j++) {
+      cur[j] = a[i - 1] === b[j - 1] ? prev[j - 1] + 1 : Math.max(prev[j], cur[j - 1]);
+    }
+    const t = prev; prev = cur; cur = t;
+    cur.fill(0);
   }
-  let best = -1, bestScore = 0;
-  pageNorm.forEach((x, i) => {
-    const s = similarity(want, x);
-    if (s > bestScore) { bestScore = s; best = i; }
-  });
-  return bestScore >= 0.6 ? best : -1;
+  return prev[m] / Math.max(n, m);
 }
 
-function createEngine(rows) {
-  const byStem = new Map();
-  const grams = new Map();
-  const entryNorm = new Array(rows.length);
+const simCache = new Map();
+
+/** 两段文本的综合相似度（带缓存；2-gram 明显不像时跳过 LCS，控制耗时） */
+function textSim(a, b) {
+  if (!a || !b) return 0;
+  if (a === b) return 1;
+  const key = a.length <= b.length ? a + '\u0000' + b : b + '\u0000' + a;
+  const hit = simCache.get(key);
+  if (hit !== undefined) return hit;
+
+  const j = jaccard(a, b, 2);
+  const v = j < 0.2 ? j : 0.5 * j + 0.5 * lcsRatio(a, b);
+  if (simCache.size < 300000) simCache.set(key, v);
+  return v;
+}
+
+/* ============================== 引擎 ============================== */
+
+const TIERS = { HIGH: 0.85, MID: 0.70 };
+
+function createEngine(rows, options = {}) {
+  const HIGH = options.high != null ? options.high : TIERS.HIGH;
+  const MID = options.mid != null ? options.mid : TIERS.MID;
+
+  const stemExact = new Map();     // 归一化题干 -> idx[]
+  const stemExactCore = new Map(); // 去括号题干 -> idx[]
+  const stemPrefix = new Map();    // 前 6 字 -> idx[]
+  const grams2 = new Map();        // 2-gram -> idx[]
+
+  const stemN = new Array(rows.length);
+  const stemC = new Array(rows.length);
+  const optsN = new Array(rows.length);
 
   rows.forEach((row, i) => {
-    const key = norm(row[0]);
-    entryNorm[i] = row[1].map((o) => norm(stripLead(o)));
-    if (!byStem.has(key)) byStem.set(key, []);
-    byStem.get(key).push(i);
-    for (let p = 0; p + 8 <= key.length; p += 2) {
-      const g = key.slice(p, p + 8);
-      let list = grams.get(g);
-      if (!list) { list = []; grams.set(g, list); }
-      list.push(i);
+    const full = norm(row[0]);
+    const core = coreOf(row[0]);
+    stemN[i] = full;
+    stemC[i] = core;
+    optsN[i] = row[1].map((o) => norm(stripLead(o)));
+    row.__i = i;
+
+    for (const [map, key] of [[stemExact, full], [stemExactCore, core]]) {
+      if (!key) continue;
+      if (!map.has(key)) map.set(key, []);
+      map.get(key).push(i);
+    }
+
+    const pfx = (core || full).slice(0, 6);
+    if (pfx.length >= 3) {
+      if (!stemPrefix.has(pfx)) stemPrefix.set(pfx, []);
+      stemPrefix.get(pfx).push(i);
+    }
+
+    const seen = new Set();
+    for (let p = 0; p + 2 <= full.length; p++) {
+      const g = full.slice(p, p + 2);
+      if (seen.has(g)) continue;
+      seen.add(g);
+      if (!grams2.has(g)) grams2.set(g, []);
+      grams2.get(g).push(i);
     }
   });
 
-  /**
-   * 题库条目与卷面的贴合度：
-   * fit        每个卷面选项与题库最像选项的相似度均值（1=完全一致）
-   * hit        题库里有几个选项能在卷面找到
-   * allCovered 题库这条的选项是否都能在卷面找到（同分时用它决胜）
-   */
-  function scoreEntry(idx, pageNorm) {
-    if (!pageNorm.length) return { fit: 0, ov: 0, hit: 0, allCovered: false };
-    const opts = entryNorm[idx];
-
-    let sum = 0;
-    pageNorm.forEach((p) => {
-      let best = 0;
-      for (const b of opts) {
-        const s = similarity(p, b);
-        if (s > best) best = s;
-        if (best === 1) break;
+  function optionSim(pageNorm, bankNorm) {
+    if (!pageNorm.length || !bankNorm.length) return 0;
+    const oneWay = (from, to) => {
+      let sum = 0;
+      for (const a of from) {
+        let best = 0;
+        for (const b of to) {
+          const s = textSim(a, b);
+          if (s > best) best = s;
+          if (best === 1) break;
+        }
+        sum += best;
       }
-      sum += best;
-    });
-    const fit = sum / pageNorm.length;
+      return sum / from.length;
+    };
+    return 0.6 * oneWay(pageNorm, bankNorm) + 0.4 * oneWay(bankNorm, pageNorm);
+  }
 
-    let hit = 0;
-    for (const b of opts) {
-      let best = 0;
-      for (const p of pageNorm) {
-        const s = similarity(b, p);
-        if (s > best) best = s;
-        if (best === 1) break;
+  // 候选召回：精确 → 去括号精确 → 前缀桶 → 2-gram 倒排 top-N
+  function candidates(titleFull, titleCore, exclude) {
+    const out = new Set();
+    const push = (arr) => { if (arr) arr.forEach((i) => { if (i !== exclude) out.add(i); }); };
+    push(stemExact.get(titleFull));
+    push(stemExactCore.get(titleCore));
+    push(stemPrefix.get((titleCore || titleFull).slice(0, 6)));
+
+    if (out.size < 24) {
+      const cnt = new Map();
+      const seen = new Set();
+      for (let p = 0; p + 2 <= titleFull.length; p++) {
+        const g = titleFull.slice(p, p + 2);
+        if (seen.has(g)) continue;
+        seen.add(g);
+        const list = grams2.get(g);
+        if (list) list.forEach((i) => { if (i !== exclude) cnt.set(i, (cnt.get(i) || 0) + 1); });
       }
-      if (best >= 0.75) hit++;
+      [...cnt.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, options.candidateCap || 40)
+        .forEach(([i]) => out.add(i));
     }
-    return { fit, ov: fit, hit, allCovered: hit === opts.length };
+    return [...out];
   }
 
-  function better(a, b) {
-    if (!b) return true;
-    if (a.fit !== b.fit) return a.fit > b.fit;
-    if (a.allCovered !== b.allCovered) return a.allCovered;
-    return a.hit > b.hit;
+  function scoreCandidate(i, titleFull, titleCore, pageNorm) {
+    const stemSim = Math.max(
+      textSim(titleFull, stemN[i]),
+      titleCore ? textSim(titleCore, stemC[i]) : 0,
+    );
+    const optSim = optionSim(pageNorm, optsN[i]);
+    return { idx: i, stemSim, optSim, score: 0.6 * stemSim + 0.4 * optSim };
   }
 
+  /**
+   * 选项一一对齐：正确项与卷面项做贪心二分匹配，避免两个正确项撞到同一项；
+   * 允许题库选项在卷面缺失（返回已匹配部分并标记 partial）。
+   */
   function mapPicks(entry, pageOpts) {
     const ck = entry[2] || '';
     const pn = pageOpts.map((o) => norm(stripLead(o)));
+    const bn = optsN[entry.__i] || entry[1].map((o) => norm(stripLead(o)));
+
+    const pairs = [];
+    for (let bi = 0; bi < ck.length; bi++) {
+      if (ck[bi] !== '1') continue;
+      for (let pi = 0; pi < pn.length; pi++) pairs.push([textSim(bn[bi], pn[pi]), bi, pi]);
+    }
+    pairs.sort((a, b) => b[0] - a[0]);
+
+    const usedBank = new Set();
+    const usedPage = new Set();
     const picks = [];
-    entry[1].forEach((opt, i) => {
-      if (ck[i] !== '1') return;
-      const j = findOption(norm(stripLead(opt)), pn);
-      if (j >= 0) picks.push(j);
-    });
-    return [...new Set(picks)].sort((a, b) => a - b);
-  }
-
-  function findGramCandidate(key, pageNorm) {
-    const cnt = new Map();
-    for (let p = 0; p + 8 <= key.length; p += 2) {
-      const list = grams.get(key.slice(p, p + 8));
-      if (list) list.forEach((i) => cnt.set(i, (cnt.get(i) || 0) + 1));
+    for (const [s, bi, pi] of pairs) {
+      if (usedBank.has(bi)) continue;
+      if (s < 0.6) continue;
+      if (usedPage.has(pi)) continue;
+      usedBank.add(bi);
+      usedPage.add(pi);
+      picks.push(pi);
     }
-    let best = null, bestScore = null;
-    cnt.forEach((c, i) => {
-      const bank = norm(rows[i][0]);
-      const denom = Math.max(1, Math.min((key.length - 7 + 1) / 2, (bank.length - 7 + 1) / 2));
-      if (c / denom < 0.75) return;
-      const sc = scoreEntry(i, pageNorm);
-      if (better(sc, bestScore)) { bestScore = sc; best = i; }
-    });
-    return { idx: best, score: bestScore };
+    const expect = [...ck].filter((c) => c === '1').length;
+    return { picks: picks.sort((a, b) => a - b), partial: usedBank.size < expect, expect };
   }
 
-  /**
-   * 解题：
-   * 1) 按题干原样找到所有同名题，挑「选项最贴合」的那一套（解决同题多版本）；
-   * 2) 找不到就退化为 8-gram 相似度匹配；
-   * 3) 答案按选项文本映射到卷面下标（不依赖字母，兼容选项顺序被打乱）。
-   */
-  function solve(title, pageOpts) {
-    const key = norm(title);
+  /** 排序候选（用于诊断、相似题参考与留一法评测） */
+  function rank(title, pageOpts, opts2 = {}) {
+    const titleFull = norm(title);
+    const titleCore = coreOf(title);
     const pageNorm = pageOpts.map((o) => norm(stripLead(o)));
-    let best = null, bestScore = null;
+    const top = opts2.top || 3;
 
-    (byStem.get(key) || []).forEach((idx) => {
-      const sc = scoreEntry(idx, pageNorm);
-      if (better(sc, bestScore)) { bestScore = sc; best = idx; }
-    });
-
-    if (!best || !bestScore || bestScore.ov < 0.6) {
-      const g = findGramCandidate(key, pageNorm);
-      if (g.idx != null && g.score && g.score.ov >= 0.6 && better(g.score, bestScore)) {
-        best = g.idx; bestScore = g.score;
-      }
-    }
-
-    if (best == null) return { ok: false, reason: '题库未命中' };
-
-    const picks = mapPicks(rows[best], pageOpts);
-    if (!picks.length) return { ok: false, reason: '选项与题库版本不一致', entry: rows[best] };
-
-    return { ok: true, picks, conf: +bestScore.ov.toFixed(2), entry: rows[best], idx: best };
+    return candidates(titleFull, titleCore, opts2.exclude)
+      .map((i) => scoreCandidate(i, titleFull, titleCore, pageNorm))
+      .sort((a, b) => (b.score - a.score) || (b.stemSim - a.stemSim))
+      .slice(0, top)
+      .map((c) => {
+        const m = mapPicks(rows[c.idx], pageOpts);
+        return { idx: c.idx, stemSim: c.stemSim, optSim: c.optSim, score: c.score, picks: m.picks, partial: m.partial, entry: rows[c.idx] };
+      });
   }
 
-  return { solve, similarity, size: rows.length };
+  /** 解题主入口：tier = high（题库确信）/ mid（建议核对）/ none（未命中） */
+  function solve(title, pageOpts) {
+    const ranked = rank(title, pageOpts, { top: 3 });
+    const best = ranked.find((c) => c.picks.length > 0);
+
+    if (!best) {
+      const top = ranked[0];
+      return {
+        ok: false,
+        tier: 'none',
+        reason: top ? '选项与题库版本不一致' : '题库未命中',
+        nearest: top ? { score: +top.score.toFixed(2), partial: top.partial } : null,
+        entry: top ? top.entry : null,
+      };
+    }
+
+    const near = ranked.find((c) => c !== best);
+    const nearest = near ? { score: +near.score.toFixed(2), stem: near.entry[0].slice(0, 24) } : null;
+
+    if (best.score >= HIGH) {
+      return { ok: true, tier: 'high', picks: best.picks, conf: +best.score.toFixed(2), entry: best.entry, nearest, partial: best.partial };
+    }
+    if (best.score >= MID) {
+      return { ok: true, tier: 'mid', picks: best.picks, conf: +best.score.toFixed(2), entry: best.entry, nearest, partial: best.partial };
+    }
+    return {
+      ok: false,
+      tier: 'none',
+      reason: '相似度不足 ' + best.score.toFixed(2),
+      nearest: { score: +best.score.toFixed(2), stem: best.entry[0].slice(0, 24) },
+    };
+  }
+
+  return { solve, rank, size: rows.length, thresholds: { HIGH, MID } };
 }
 
   const engine = createEngine(BANK);
@@ -253,7 +373,8 @@ function createEngine(rows) {
   function decorate(q, res) {
     clearMarks(q);
     if (!res.ok) {
-      badge(q, '⚠ ' + res.reason, 'warn');
+      const hint = res.nearest && res.nearest.score ? '，最接近 ' + res.nearest.score : '';
+      badge(q, '? ' + res.reason + hint, 'none');
       return;
     }
     if (cfg.highlight) {
@@ -267,7 +388,9 @@ function createEngine(rows) {
     }
     const letters = res.picks.map((i) => LETTERS[i]).join('');
     const texts = res.picks.map((i) => stripLead(q.opts[i])).join(' / ');
-    badge(q, '✓ ' + letters + ' ' + texts, 'ok');
+    const tail = res.partial ? '（部分匹配）' : '';
+    if (res.tier === 'mid') badge(q, '≈ ' + letters + ' ' + texts + ' · 建议核对' + tail, 'mid');
+    else badge(q, '✓ ' + letters + ' ' + texts + tail, 'ok');
   }
 
   function badge(q, text, kind) {
@@ -275,8 +398,8 @@ function createEngine(rows) {
     el.className = PREFIX + '-badge ' + PREFIX + '-badge-' + kind;
     el.textContent = text;
     el.title = kind === 'ok'
-      ? '来自题库：' + (META.version || '')
-      : '题库里没有这道题（或选项版本不同），需要人工判断';
+      ? '题库精确命中（' + (META.version || '') + '）'
+      : (kind === 'mid' ? '题库里找到相近题目，答案仅供参考，请自行核对' : '题库里没有这道题（或选项版本不同），需要人工判断');
     q.titleEl.appendChild(el);
   }
 
@@ -290,7 +413,8 @@ function createEngine(rows) {
       '.' + PREFIX + '-badge{display:inline-block;margin:6px 0 0 8px;padding:1px 8px;border-radius:6px;',
       'font-size:12px;line-height:18px;vertical-align:middle;max-width:100%;}',
       '.' + PREFIX + '-badge-ok{background:#e7f6ec;color:#116b3a;border:1px solid #94d3ae;}',
-      '.' + PREFIX + '-badge-warn{background:#fff4e5;color:#8a5300;border:1px solid #f0c07a;}',
+      '.' + PREFIX + '-badge-mid{background:#fff4e5;color:#8a5300;border:1px solid #f0c07a;}',
+      '.' + PREFIX + '-badge-none{background:#f1f3f5;color:#5b6470;border:1px solid #d6dbe1;}',
       '.' + PREFIX + '-opt{transition:background .15s ease;}',
       '#' + PANEL_ID + '{position:fixed;right:16px;bottom:16px;width:340px;max-width:92vw;background:#fff;',
       'border:1px solid #d8dee6;border-radius:8px;box-shadow:0 8px 24px rgba(16,24,40,.16);',
@@ -306,7 +430,8 @@ function createEngine(rows) {
       '#' + PANEL_ID + ' .row:hover{background:#f2f5f9;}',
       '#' + PANEL_ID + ' .row i{font-style:normal;color:#6b7280;min-width:22px;text-align:right;}',
       '#' + PANEL_ID + ' .row .a{font-weight:600;color:#116b3a;min-width:16px;}',
-      '#' + PANEL_ID + ' .row.bad .a{color:#b45309;}',
+      '#' + PANEL_ID + ' .row .a.mid{color:#b45309;}',
+      '#' + PANEL_ID + ' .row.bad .a.none{color:#8b95a1;}',
       '#' + PANEL_ID + ' .row span{flex:1;color:#374151;}',
       '#' + PANEL_ID + ' .foot{padding:6px 10px;border-top:1px solid #e3e8ef;color:#6b7280;font-size:11px;}',
       '.' + PREFIX + '-flash{outline:2px solid #1f9d55;outline-offset:2px;transition:outline .3s ease;}',
@@ -367,20 +492,28 @@ function createEngine(rows) {
 
   function renderPanel(paper, results) {
     const p = ensurePanel();
-    const okCount = results.filter((r) => r.ok).length;
+    const highCount = results.filter((r) => r.tier === 'high').length;
+    const midCount = results.filter((r) => r.tier === 'mid').length;
+    const noneCount = results.length - highCount - midCount;
     p.querySelector('.body').innerHTML = paper.map((q, i) => {
       const r = results[i];
       if (r.ok) {
         const letters = r.picks.map((x) => LETTERS[x]).join('');
         const text = r.picks.map((x) => stripLead(q.opts[x])).join(' / ');
-        return '<div class="row" data-n="' + q.n + '"><i>' + q.n + '.</i><em class="a">' + letters +
-          '</em><span>' + esc(text) + '</span></div>';
+        const cls = r.tier === 'mid' ? 'a mid' : 'a';
+        const mark = r.tier === 'mid' ? '≈' + letters : letters;
+        return '<div class="row" data-n="' + q.n + '"><i>' + q.n + '.</i><em class="' + cls + '">' + mark +
+          '</em><span>' + esc(text) + (r.partial ? '（部分匹配）' : '') + '</span></div>';
       }
-      return '<div class="row bad" data-n="' + q.n + '"><i>' + q.n + '.</i><em class="a">?</em><span>' +
-        esc(r.reason) + '</span></div>';
+      const hint = r.nearest && r.nearest.stem
+        ? ' · 最接近：' + esc(r.nearest.stem) + '…（' + r.nearest.score + '）'
+        : '';
+      return '<div class="row bad" data-n="' + q.n + '"><i>' + q.n + '.</i><em class="a none">?</em><span>' +
+        esc(r.reason) + hint + '</span></div>';
     }).join('');
     p.querySelector('.foot').textContent =
-      '命中 ' + okCount + '/' + paper.length + '　题库 ' + (META.count || BANK.length) + ' 题 · ' + (META.built || '');
+      '确信 ' + highCount + ' · 待核对 ' + midCount + ' · 未命中 ' + noneCount +
+      '　题库 ' + (META.count || BANK.length) + ' 题 · ' + (META.built || '');
   }
 
   function esc(s) {
