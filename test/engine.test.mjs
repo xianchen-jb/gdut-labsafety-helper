@@ -132,6 +132,18 @@ const cases = [
       'C. 一经合闸会使两个电源系统并列或引起反送电的开关、刀闸。'],
     expect: [0, 1, 2],
   },
+  {
+    name: '题干一致选项被改写·仍应给答案',
+    title: '测量绝缘电阻可用（）？',
+    opts: ['A. 万用表（指针式）', 'B. 兆欧表（俗称摇表）', 'C. 示波器', 'D. 测电笔'],
+    expect: [1],
+  },
+  {
+    name: '相近题干·未命中也要给参考',
+    title: '窒息灭火法的主要工具是（）。',
+    opts: ['A. 水', 'B. 二氧化碳灭火器', 'C. 砂子', 'D. 干粉灭火器'],
+    expectRef: [1],
+  },
 ];
 
 let pass = 0;
@@ -141,6 +153,12 @@ const tierOf = [];
 for (const c of cases) {
   const res = engine.solve(c.title, c.opts);
   tierOf.push(`${c.name.split('·')[0]}=${res.tier}${res.ok ? '(' + res.conf + ')' : ''}`);
+  if (c.expectRef) {
+    const got = res.reference ? res.reference.picks : null;
+    if (!res.ok && got && JSON.stringify(got) === JSON.stringify(c.expectRef)) pass++;
+    else fails.push(`${c.name}: 期望未命中但给参考 ${JSON.stringify(c.expectRef)}，实际 ok=${res.ok} ref=${JSON.stringify(got)}`);
+    continue;
+  }
   if (c.expect === false) {
     if (res.ok) fails.push(`${c.name}: 期望未命中，实际命中 ${JSON.stringify(res.picks)}`);
     else pass++;

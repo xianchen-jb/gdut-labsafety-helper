@@ -220,15 +220,18 @@ export function createEngine(rows, options = {}) {
   /**
    * 选项一一对齐：正确项与卷面项做贪心二分匹配，避免两个正确项撞到同一项；
    * 允许题库选项在卷面缺失（返回已匹配部分并标记 partial）。
+   *
+   * 两轮匹配：第一轮严格（相似度 ≥0.6）；对没匹配上的正确项，
+   * 第二轮放宽到"独特片段互相包含"或"长文本降阈值"，专治卷面把选项改写/扩写的情况。
    */
   function mapPicks(entry, pageOpts) {
     const ck = entry[2] || '';
     const pn = pageOpts.map((o) => norm(stripLead(o)));
     const bn = optsN[entry.__i] || entry[1].map((o) => norm(stripLead(o)));
+    const correctBank = [...ck].map((c, i) => (c === '1' ? i : -1)).filter((i) => i >= 0);
 
     const pairs = [];
-    for (let bi = 0; bi < ck.length; bi++) {
-      if (ck[bi] !== '1') continue;
+    for (const bi of correctBank) {
       for (let pi = 0; pi < pn.length; pi++) pairs.push([textSim(bn[bi], pn[pi]), bi, pi]);
     }
     pairs.sort((a, b) => b[0] - a[0]);
@@ -244,8 +247,30 @@ export function createEngine(rows, options = {}) {
       usedPage.add(pi);
       picks.push(pi);
     }
-    const expect = [...ck].filter((c) => c === '1').length;
-    return { picks: picks.sort((a, b) => a - b), partial: usedBank.size < expect, expect };
+
+    const missing = [];
+    for (const bi of correctBank) {
+      if (usedBank.has(bi)) continue;
+      const want = bn[bi];
+      let found = -1;
+      for (let pi = 0; pi < pn.length; pi++) {
+        if (usedPage.has(pi)) continue;
+        const p = pn[pi];
+        if (!p || !want) continue;
+        if (want.length >= 3 && (p.includes(want) || want.includes(p))) { found = pi; break; }
+        const th = want.length >= 20 ? 0.45 : (want.length >= 8 ? 0.5 : 0.6);
+        if (textSim(want, p) >= th) { found = pi; break; }
+      }
+      if (found >= 0) { usedBank.add(bi); usedPage.add(found); picks.push(found); }
+      else missing.push(entry[1][bi]);
+    }
+
+    return {
+      picks: picks.sort((a, b) => a - b),
+      partial: missing.length > 0,
+      expect: correctBank.length,
+      missing,
+    };
   }
 
   /** 排序候选（用于诊断、相似题参考与留一法评测） */
@@ -261,11 +286,18 @@ export function createEngine(rows, options = {}) {
       .slice(0, top)
       .map((c) => {
         const m = mapPicks(rows[c.idx], pageOpts);
-        return { idx: c.idx, stemSim: c.stemSim, optSim: c.optSim, score: c.score, picks: m.picks, partial: m.partial, entry: rows[c.idx] };
+        return {
+          idx: c.idx, stemSim: c.stemSim, optSim: c.optSim, score: c.score,
+          picks: m.picks, partial: m.partial, missing: m.missing, entry: rows[c.idx],
+        };
       });
   }
 
-  /** 解题主入口：tier = high（题库确信）/ mid（建议核对）/ none（未命中） */
+  // 题干一致就认这道题：不让"选项被改写"把同题误杀
+  const STEM_GATE_HIGH = options.stemHigh != null ? options.stemHigh : 0.97;
+  const STEM_GATE_MID = options.stemMid != null ? options.stemMid : 0.85;
+
+  /** 解题主入口：tier = high（题库确信）/ mid（建议核对）/ none（未命中，给参考） */
   function solve(title, pageOpts) {
     const ranked = rank(title, pageOpts, { top: 3 });
     const best = ranked.find((c) => c.picks.length > 0);
@@ -276,27 +308,40 @@ export function createEngine(rows, options = {}) {
         ok: false,
         tier: 'none',
         reason: top ? '选项与题库版本不一致' : '题库未命中',
-        nearest: top ? { score: +top.score.toFixed(2), partial: top.partial } : null,
+        nearest: top ? { score: +top.score.toFixed(2), stem: top.entry[0].slice(0, 24) } : null,
         entry: top ? top.entry : null,
       };
     }
 
     const near = ranked.find((c) => c !== best);
     const nearest = near ? { score: +near.score.toFixed(2), stem: near.entry[0].slice(0, 24) } : null;
+    const base = {
+      picks: best.picks,
+      conf: +best.score.toFixed(2),
+      stemSim: +best.stemSim.toFixed(2),
+      optSim: +best.optSim.toFixed(2),
+      entry: best.entry,
+      nearest,
+      partial: best.partial,
+      missing: best.missing,
+    };
 
-    if (best.score >= HIGH) {
-      return { ok: true, tier: 'high', picks: best.picks, conf: +best.score.toFixed(2), entry: best.entry, nearest, partial: best.partial };
+    if (best.score >= HIGH || best.stemSim >= STEM_GATE_HIGH) {
+      return { ok: true, tier: 'high', ...base };
     }
-    if (best.score >= MID) {
-      return { ok: true, tier: 'mid', picks: best.picks, conf: +best.score.toFixed(2), entry: best.entry, nearest, partial: best.partial };
+    if (best.score >= MID || best.stemSim >= STEM_GATE_MID) {
+      return { ok: true, tier: 'mid', ...base };
     }
+
+    // 未命中，但把最接近题目的答案作为"参考"一起返回（明确标注，不冒充题库答案）
     return {
       ok: false,
       tier: 'none',
-      reason: '相似度不足 ' + best.score.toFixed(2),
-      nearest: { score: +best.score.toFixed(2), stem: best.entry[0].slice(0, 24) },
+      reason: '相似度不足',
+      reference: { ...base, score: base.conf },
+      nearest: { score: base.conf, stem: best.entry[0].slice(0, 24) },
     };
   }
 
-  return { solve, rank, size: rows.length, thresholds: { HIGH, MID } };
+  return { solve, rank, size: rows.length, thresholds: { HIGH, MID, STEM_GATE_HIGH, STEM_GATE_MID } };
 }

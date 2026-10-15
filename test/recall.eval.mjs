@@ -83,12 +83,41 @@ function perturb(original, kind) {
       want,
     };
   }
+  if (kind === 'optreword') {
+    // 模拟"题干一字不差、但卷面把选项措辞改写了"（本轮实测的主要未命中原因）
+    const keep = new Set(correctIdx(original));
+    return {
+      title,
+      opts: opts.map((o, i) => {
+        if (keep.has(i)) return o;
+        const body = stripLead(o);
+        if (body.length <= 3) return o;
+        return body.slice(0, Math.max(2, Math.floor(body.length * 0.6)));
+      }),
+      want,
+    };
+  }
+  if (kind === 'reword2') {
+    // 复刻本轮实况：题干被改动几个字 + 选项措辞被改写（实测得分 0.62 那种）
+    const keep = new Set(correctIdx(original));
+    const t2 = title.length > 14 ? title.slice(0, title.length - 4) + '其他' : title;
+    return {
+      title: t2,
+      opts: opts.map((o, i) => {
+        if (keep.has(i)) return o;
+        const body = stripLead(o);
+        if (body.length <= 4) return '相关处理措施';
+        return body.slice(0, Math.max(2, Math.floor(body.length * 0.5))) + '等情况';
+      }),
+      want,
+    };
+  }
   return null;
 }
 
-const KINDS = ['shuffle', 'width', 'trad', 'core', 'drop', 'space'];
+const KINDS = ['shuffle', 'width', 'trad', 'core', 'drop', 'space', 'optreword', 'reword2'];
 
-const stats = new Map(KINDS.map((k) => [k, { total: 0, correct: 0, wrong: 0, miss: 0, mid: 0, samples: [] }]));
+const stats = new Map(KINDS.map((k) => [k, { total: 0, correct: 0, wrong: 0, miss: 0, ref: 0, none: 0, samples: [] }]));
 const thresholdPool = [];
 
 for (let i = 0; i < Math.min(limit, rows.length); i++) {
@@ -106,7 +135,14 @@ for (let i = 0; i < Math.min(limit, rows.length); i++) {
 
     thresholdPool.push({ conf: res.ok ? res.conf : 0, correct: !!isSame });
 
-    if (!res.ok) { st.miss++; if (st.samples.length < 3) st.samples.push(`${kind} miss :: ${row[0].slice(0, 26)}`); }
+    if (!res.ok) {
+      st.miss++;
+      if (res.reference && res.reference.picks.length) st.ref++;
+      else st.none++;
+      if (st.samples.length < 3) {
+        st.samples.push(`${kind} miss(参考${res.reference && res.reference.picks.length ? '有' : '无'}) :: ${row[0].slice(0, 24)}`);
+      }
+    }
     else if (isSame) { st.correct++; if (res.tier === 'mid') st.mid++; }
     else {
       st.wrong++;
@@ -118,7 +154,7 @@ for (let i = 0; i < Math.min(limit, rows.length); i++) {
 const pct = (a, b) => (b ? ((a / b) * 100).toFixed(1) + '%' : '—');
 
 console.log(`扰动鲁棒性评测（样本 ${Math.min(limit, rows.length)} 题）`);
-console.log('  变形       用例数   答对     答错     未命中   准确率');
+console.log('  变形       用例数   答对     答错    仅参考   无答案   准确率');
 for (const kind of KINDS) {
   const s = stats.get(kind);
   if (!s.total) continue;
@@ -127,7 +163,8 @@ for (const kind of KINDS) {
     String(s.total).padStart(6) +
     String(s.correct).padStart(8) +
     String(s.wrong).padStart(8) +
-    String(s.miss).padStart(9) +
+    String(s.ref).padStart(8) +
+    String(s.none).padStart(8) +
     ('   ' + pct(s.correct, s.total)).padStart(10),
   );
 }
@@ -136,9 +173,12 @@ const totalAll = [...stats.values()].reduce((a, b) => a + b.total, 0);
 const correctAll = [...stats.values()].reduce((a, b) => a + b.correct, 0);
 const wrongAll = [...stats.values()].reduce((a, b) => a + b.wrong, 0);
 const missAll = [...stats.values()].reduce((a, b) => a + b.miss, 0);
+const refAll = [...stats.values()].reduce((a, b) => a + b.ref, 0);
+const noneAll = [...stats.values()].reduce((a, b) => a + b.none, 0);
 console.log(
   '  ' + '合计'.padEnd(9) + String(totalAll).padStart(6) + String(correctAll).padStart(8) +
-  String(wrongAll).padStart(8) + String(missAll).padStart(9) + ('   ' + pct(correctAll, totalAll)).padStart(10),
+  String(wrongAll).padStart(8) + String(refAll).padStart(8) + String(noneAll).padStart(8) +
+  ('   ' + pct(correctAll, totalAll)).padStart(10),
 );
 
 console.log('');

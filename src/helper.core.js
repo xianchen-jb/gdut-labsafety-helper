@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         广工实验室安全 · 开卷助手（只读标注版）
 // @namespace    local.gdut.labsafety.helper
-// @version      0.2.0
+// @version      0.3.0
 // @description  读取卷面题目，在浮动面板列出答案并高亮正确选项。只标注，不自动点选、不自动交卷。
 // @author       local
 // @match        https://labsafety.gdut.edu.cn/*
@@ -77,8 +77,17 @@
   function decorate(q, res) {
     clearMarks(q);
     if (!res.ok) {
-      const hint = res.nearest && res.nearest.score ? '，最接近 ' + res.nearest.score : '';
-      badge(q, '? ' + res.reason + hint, 'none');
+      const ref = res.reference;
+      if (ref && ref.picks.length) {
+        const letters = ref.picks.map((i) => LETTERS[i]).join('');
+        const texts = ref.picks.map((i) => stripLead(q.opts[i])).join(' / ');
+        badge(q, '? 未命中 · 参考 ' + letters + ' ' + texts + '（相似 ' + ref.score + '）', 'ref');
+      } else if (q.hasImg) {
+        badge(q, '? 图片题，需人工判断' + (res.nearest ? '（最接近 ' + res.nearest.score + '）' : ''), 'none');
+      } else {
+        const hint = res.nearest && res.nearest.score ? '，最接近 ' + res.nearest.score : '';
+        badge(q, '? ' + res.reason + hint, 'none');
+      }
       return;
     }
     if (cfg.highlight) {
@@ -103,7 +112,11 @@
     el.textContent = text;
     el.title = kind === 'ok'
       ? '题库精确命中（' + (META.version || '') + '）'
-      : (kind === 'mid' ? '题库里找到相近题目，答案仅供参考，请自行核对' : '题库里没有这道题（或选项版本不同），需要人工判断');
+      : (kind === 'mid'
+        ? '题库里找到相近题目，答案仅供参考，请自行核对'
+        : (kind === 'ref'
+          ? '题库未命中；下方是"最接近题目"的答案，仅供参考，请自行核对'
+          : '题库里没有这道题（或选项版本不同），需要人工判断'));
     q.titleEl.appendChild(el);
   }
 
@@ -118,6 +131,7 @@
       'font-size:12px;line-height:18px;vertical-align:middle;max-width:100%;}',
       '.' + PREFIX + '-badge-ok{background:#e7f6ec;color:#116b3a;border:1px solid #94d3ae;}',
       '.' + PREFIX + '-badge-mid{background:#fff4e5;color:#8a5300;border:1px solid #f0c07a;}',
+      '.' + PREFIX + '-badge-ref{background:#fffdf5;color:#8a5300;border:1px dashed #e0b06a;}',
       '.' + PREFIX + '-badge-none{background:#f1f3f5;color:#5b6470;border:1px solid #d6dbe1;}',
       '.' + PREFIX + '-opt{transition:background .15s ease;}',
       '#' + PANEL_ID + '{position:fixed;right:16px;bottom:16px;width:340px;max-width:92vw;background:#fff;',
@@ -135,8 +149,12 @@
       '#' + PANEL_ID + ' .row i{font-style:normal;color:#6b7280;min-width:22px;text-align:right;}',
       '#' + PANEL_ID + ' .row .a{font-weight:600;color:#116b3a;min-width:16px;}',
       '#' + PANEL_ID + ' .row .a.mid{color:#b45309;}',
+      '#' + PANEL_ID + ' .row .a.ref{color:#b45309;font-weight:600;}',
       '#' + PANEL_ID + ' .row.bad .a.none{color:#8b95a1;}',
       '#' + PANEL_ID + ' .row span{flex:1;color:#374151;}',
+      '#' + PANEL_ID + ' .todo{margin:2px 6px 6px;padding:5px 8px;border-radius:6px;background:#fff7e6;',
+      'border:1px solid #f0d9a8;color:#8a5300;font-size:12px;line-height:1.5;}',
+      '#' + PANEL_ID + ' .todo.allok{background:#eefaf1;border-color:#b7e0c6;color:#116b3a;}',
       '#' + PANEL_ID + ' .foot{padding:6px 10px;border-top:1px solid #e3e8ef;color:#6b7280;font-size:11px;}',
       '.' + PREFIX + '-flash{outline:2px solid #1f9d55;outline-offset:2px;transition:outline .3s ease;}',
     ].join('');
@@ -154,6 +172,7 @@
     panelEl.innerHTML =
       '<div class="h"><b>安全考试 · 开卷助手</b>' +
       '<button data-act="toggle">' + (cfg.collapsed ? '展开' : '收起') + '</button>' +
+      '<button data-act="export">导出诊断</button>' +
       '<button data-act="rescan">重扫</button></div>' +
       '<div class="body"></div>' +
       '<div class="foot"></div>';
@@ -165,6 +184,7 @@
         const act = btn.getAttribute('data-act');
         if (act === 'toggle') { cfg.collapsed = !cfg.collapsed; saveCfg(); applyCollapsed(); }
         if (act === 'rescan') { scan(true); }
+        if (act === 'export') { exportDiag(); }
         return;
       }
       const row = ev.target.closest && ev.target.closest('.row');
@@ -196,10 +216,20 @@
 
   function renderPanel(paper, results) {
     const p = ensurePanel();
-    const highCount = results.filter((r) => r.tier === 'high').length;
-    const midCount = results.filter((r) => r.tier === 'mid').length;
-    const noneCount = results.length - highCount - midCount;
-    p.querySelector('.body').innerHTML = paper.map((q, i) => {
+    let highCount = 0, midCount = 0, refCount = 0, noneCount = 0;
+    const todo = [];
+    results.forEach((r, i) => {
+      if (r.ok && r.tier === 'high' && !r.partial) highCount++;
+      else if (r.ok) { midCount++; todo.push(paper[i].n); }
+      else if (r.reference && r.reference.picks.length) { refCount++; todo.push(paper[i].n); }
+      else { noneCount++; todo.push(paper[i].n); }
+    });
+
+    const strip = todo.length
+      ? '<div class="todo">需人工核对 ' + todo.length + ' 题：' + todo.join('、') + '</div>'
+      : '<div class="todo allok">全部命中题库，可直接交卷</div>';
+
+    const rows = paper.map((q, i) => {
       const r = results[i];
       if (r.ok) {
         const letters = r.picks.map((x) => LETTERS[x]).join('');
@@ -209,14 +239,23 @@
         return '<div class="row" data-n="' + q.n + '"><i>' + q.n + '.</i><em class="' + cls + '">' + mark +
           '</em><span>' + esc(text) + (r.partial ? '（部分匹配）' : '') + '</span></div>';
       }
+      const ref = r.reference;
+      if (ref && ref.picks.length) {
+        const letters = ref.picks.map((x) => LETTERS[x]).join('');
+        const text = ref.picks.map((x) => stripLead(q.opts[x])).join(' / ');
+        return '<div class="row bad" data-n="' + q.n + '"><i>' + q.n + '.</i><em class="a ref">参考' + letters +
+          '</em><span>' + esc(text) + '（相似 ' + ref.score + '，非题库答案）</span></div>';
+      }
       const hint = r.nearest && r.nearest.stem
         ? ' · 最接近：' + esc(r.nearest.stem) + '…（' + r.nearest.score + '）'
         : '';
       return '<div class="row bad" data-n="' + q.n + '"><i>' + q.n + '.</i><em class="a none">?</em><span>' +
-        esc(r.reason) + hint + '</span></div>';
+        (q.hasImg ? '图片题' : esc(r.reason)) + hint + '</span></div>';
     }).join('');
+
+    p.querySelector('.body').innerHTML = strip + rows;
     p.querySelector('.foot').textContent =
-      '确信 ' + highCount + ' · 待核对 ' + midCount + ' · 未命中 ' + noneCount +
+      '确信 ' + highCount + ' · 待核对 ' + midCount + ' · 参考 ' + refCount + ' · 无答案 ' + noneCount +
       '　题库 ' + (META.count || BANK.length) + ' 题 · ' + (META.built || '');
   }
 
@@ -259,6 +298,65 @@
 
   let lastSig = '';
   let busy = false;
+  let lastPaper = null;
+  let lastResults = null;
+
+  /** 导出诊断：把每题的原文与判定细节存成本地 JSON（不上传任何数据） */
+  function exportDiag() {
+    if (!lastPaper || !lastResults) { return; }
+    const pickTexts = (q, picks) => (picks || []).map((k) => (q.opts[k] || '').replace(/\s+/g, ' '));
+    const items = lastPaper.map((q, i) => {
+      const r = lastResults[i] || {};
+      const picks = r.ok ? r.picks : ((r.reference && r.reference.picks) || []);
+      const bank = r.entry || (r.reference && r.reference.entry) || null;
+      return {
+        n: q.n,
+        title: q.title.replace(/\s+/g, ' '),
+        opts: q.opts.map((o) => o.replace(/\s+/g, ' ')),
+        img: q.hasImg,
+        multi: q.multi,
+        tier: r.ok ? r.tier : 'none',
+        conf: r.conf != null ? r.conf : (r.reference ? r.reference.score : null),
+        stemSim: r.stemSim != null ? r.stemSim : (r.reference ? r.reference.stemSim : null),
+        optSim: r.optSim != null ? r.optSim : null,
+        picks,
+        pickedTexts: pickTexts(q, picks),
+        bankStem: bank ? bank[0] : '',
+        bankOpts: bank ? bank[1] : [],
+        bankCk: bank ? bank[2] : '',
+        nearest: r.nearest || null,
+      };
+    });
+    const payload = {
+      helper: 'gdut-labsafety-helper',
+      version: META.version || '',
+      bank: META.count || BANK.length,
+      url: location.hash,
+      at: new Date().toISOString(),
+      items,
+    };
+    const text = JSON.stringify(payload, null, 1);
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text);
+    } catch (e) { /* 剪贴板不可用就算了 */ }
+
+    try {
+      const blob = new Blob([text], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'gdut-helper-diag-' + new Date().toISOString().slice(0, 19).replace(/[:T]/g, '') + '.json';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (e) { /* 下载失败时至少已复制到剪贴板 */ }
+
+    const foot = panelEl && panelEl.querySelector('.foot');
+    if (foot) {
+      foot.textContent = '已导出诊断文件（同时复制到剪贴板）· 共 ' + items.length + ' 题';
+      setTimeout(() => { if (lastPaper && lastResults) renderPanel(lastPaper, lastResults); }, 4000);
+    }
+  }
 
   function isExamPage() {
     return /#\/exam\/test\/do\//.test(location.hash);
@@ -276,6 +374,8 @@
     busy = true;
     try {
       const results = paper.map((q) => engine.solve(q.title, q.opts));
+      lastPaper = paper;
+      lastResults = results;
       paper.forEach((q, i) => decorate(q, results[i]));
       renderPanel(paper, results);
     } finally {
