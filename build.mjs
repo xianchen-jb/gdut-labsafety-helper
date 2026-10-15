@@ -79,7 +79,28 @@ function buildRows() {
   // 实战补充：题库没有、但考试出现过的题
   if (existsSync(SRC_VERIFIED)) {
     for (const e of readJsonl(SRC_VERIFIED)) {
-      if (e.tag !== 'exam-only' || !e.t || !Array.isArray(e.opts)) continue;
+      if (!e.t || !Array.isArray(e.opts)) continue;
+
+      // img-map：题库里已有这道题，只是补录图片指纹 —— 把指纹并到已有条目上
+      if (e.tag === 'img-map') {
+        const key = norm(e.t) + '|' + e.opts.map(norm).join('|');
+        const idx = rows.findIndex((r) => norm(r[0]) + '|' + r[1].map(norm).join('|') === key);
+        const imgs = imgOf(e);
+        if (idx >= 0 && imgs.length) {
+          const cur = Array.isArray(rows[idx][3]) ? rows[idx][3] : (rows[idx][3] ? [rows[idx][3]] : []);
+          const merged = [...new Set([...cur, ...imgs])];
+          rows[idx] = [rows[idx][0], rows[idx][1], rows[idx][2], merged];
+        } else if (idx < 0) {
+          const ck = e.ck && e.ck.length === e.opts.length ? e.ck : toCk(e.a, e.opts);
+          if (ck && imgs.length) {
+            seen.add(key);
+            rows.push([e.t, e.opts, ck, imgs]);
+          }
+        }
+        continue;
+      }
+
+      if (e.tag !== 'exam-only') continue;
       const ck = toCk(e.a, e.opts);
       if (!ck) continue;
       const key = norm(e.t) + '|' + e.opts.map(norm).join('|');

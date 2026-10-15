@@ -46,7 +46,8 @@ const toCk = (a, opts) => {
   return null;
 };
 
-const existing = new Set();
+const existing = new Set();      // 库里已有的 (题干+选项)
+const existingImgMap = new Set(); // 已经补录过的 (题干+选项+指纹)
 for (const f of [BANK, VERIFIED]) {
   if (!existsSync(f)) continue;
   for (const line of readFileSync(f, 'utf8').split('\n')) {
@@ -54,7 +55,11 @@ for (const f of [BANK, VERIFIED]) {
     try {
       const e = JSON.parse(line);
       const opts = e.ops || e.opts || [];
-      if (e.t && opts.length) existing.add(norm(e.t) + '|' + opts.map(norm).join('|'));
+      if (!e.t || !opts.length) continue;
+      const key = norm(e.t) + '|' + opts.map(norm).join('|');
+      existing.add(key);
+      const fps = Array.isArray(e.imgFp) ? e.imgFp : (e.imgFp ? [e.imgFp] : []);
+      fps.forEach((fp) => existingImgMap.add(key + '|' + fp));
     } catch (err) { /* 跳过坏行 */ }
   }
 }
@@ -70,7 +75,20 @@ for (const line of readFileSync(file, 'utf8').split('\n')) {
   const ck = toCk(e.a, e.opts);
   if (!ck) { bad++; console.log('  答案无法识别: ' + e.t.slice(0, 30) + ' a=' + e.a); continue; }
   const key = norm(e.t) + '|' + e.opts.map(norm).join('|');
-  if (existing.has(key)) { dup++; console.log('  已存在，跳过: ' + e.t.slice(0, 30)); continue; }
+
+  const fps = e.img ? (Array.isArray(e.img) ? e.img : [e.img]).filter(Boolean) : [];
+  if (existing.has(key)) {
+    // 题干+选项已在库里：只有当带图片指纹、且该指纹还没补录过时，才写成 img-map 补录
+    const fresh = fps.filter((fp) => !existingImgMap.has(key + '|' + fp));
+    if (!fresh.length) { dup++; console.log('  已存在（且无新指纹），跳过: ' + e.t.slice(0, 30)); continue; }
+    fps.forEach((fp) => existingImgMap.add(key + '|' + fp));
+    const row = { tag: 'img-map', t: e.t, opts: e.opts, a: String(e.a), imgFp: fresh, src: e.src || '贡献' };
+    if (e.note) row.note = e.note;
+    out.push(JSON.stringify(row));
+    added++;
+    console.log('  补录图片指纹 ' + fresh.join(',') + ' -> ' + e.t.slice(0, 24));
+    continue;
+  }
 
   existing.add(key);
   const row = { tag: 'exam-only', t: e.t, opts: e.opts, a: String(e.a), src: e.src || '贡献' };

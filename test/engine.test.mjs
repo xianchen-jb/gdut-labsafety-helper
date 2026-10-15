@@ -169,6 +169,14 @@ const cases = [
     imgFps: ['/chem/api/file/never-seen.png'],
     expect: false,
   },
+  {
+    name: '真实图片指纹·实验室安全第3题',
+    title: '题目文字被改写，只能靠图片识别？',
+    opts: ['A. 没有高温警示', 'B. 高温设备上放有杂物及梯子挡住高温设备', 'C. 没有黄黑安全警戒线'],
+    imgFps: ['/chem/api/download/lab_check_issuses/202406/CpFS1Ox51719451430232.jpg'],
+    expect: [1],
+    expectSource: 'image',
+  },
 ];
 
 let pass = 0;
