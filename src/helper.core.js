@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         广工实验室安全 · 开卷助手（只读标注版）
 // @namespace    local.gdut.labsafety.helper
-// @version      0.5.1
+// @version      0.5.2
 // @description  广工实验室安全考试助手：读卷比对内置题库（3068 题）→ 面板列答案并高亮正确选项，可一键作答（只点选，不自动交卷），支持图片指纹匹配与三级可信度标注。全程离线，不联网。
 // @author       local
-// @match        https://labsafety.gdut.edu.cn/*
+// @match        *://labsafety.gdut.edu.cn/*
+// @match        *://*.labsafety.gdut.edu.cn/*
 // @run-at       document-idle
 // @grant        none
 // ==/UserScript==
@@ -23,6 +24,7 @@
   const PREFIX = 'gdut-helper';
   const CFG_KEY = 'gdut-helper.cfg.v1';
   const PANEL_ID = PREFIX + '-panel';
+  const TAG = '[gdut-helper]';
 
   const cfg = Object.assign({ collapsed: false, highlight: true, pos: null, scope: 'high' }, readCfg());
 
@@ -215,6 +217,7 @@
       '<div class="body"></div>' +
       '<div class="foot"></div>';
     document.body.appendChild(panelEl);
+    try { console.log(TAG, '面板已创建 v' + (META.scriptVersion || '?')); } catch (e) { /* 忽略 */ }
 
     const scopeSel = panelEl.querySelector('select[data-act="scope"]');
     if (scopeSel) {
@@ -551,7 +554,10 @@
   function scan(force) {
     if (!isExamPage() || busy) return;
     const paper = readPaper();
-    if (!paper.length) return;
+    if (!paper.length) {
+      if (force) { try { console.warn(TAG, '没读到题目：请确认当前是考试作答页', location.href); } catch (e) {} }
+      return;
+    }
 
     const sig = location.hash + '|' + paper.length + '|' + paper.map((q) => q.title.length).join(',');
     if (!force && sig === lastSig) return;
@@ -577,6 +583,10 @@
 
   function boot() {
     injectStyle();
+    try {
+      console.log(TAG, '已加载 v' + (META.scriptVersion || '?'), '| 题库 ' + (META.count || BANK.length) +
+        ' 题 | 当前页 ' + location.href + ' | ' + (isExamPage() ? '是考试页' : '不是考试页（面板不会出现）'));
+    } catch (e) { /* 忽略 */ }
     schedule(600);
 
     window.addEventListener('hashchange', () => schedule(700));
